@@ -1,29 +1,40 @@
 package advapi32
 
 import (
-	"syscall"
-	"unsafe"
+	"golang.org/x/sys/windows"
 )
 
-func OpenSCManager(lpMachineName, lpDatabaseName string, dwDesiredAccess SCManagerAccess) (SC_HANDLE, error) {
-	a1, err := syscall.UTF16PtrFromString(lpMachineName)
-	if err != nil {
-		return 0, err
-	}
+var (
+	dll = windows.NewLazyDLL("advapi32.dll")
 
-	a2, err := syscall.UTF16PtrFromString(lpDatabaseName)
-	if err != nil {
-		return 0, err
-	}
-
-	ret, _, _ := procOpenSCManager.Call(
-		uintptr(unsafe.Pointer(a1)),
-		uintptr(unsafe.Pointer(a2)),
-		uintptr(dwDesiredAccess))
-
-	if ret == 0 {
-		return 0, syscall.GetLastError()
-	}
-
-	return SC_HANDLE(ret), nil
-}
+	procRegisterServiceCtrlHandler     = dll.NewProc("RegisterServiceCtrlHandlerW")
+	procRegisterServiceCtrlHandlerEx   = dll.NewProc("RegisterServiceCtrlHandlerExW")
+	procSetServiceBits                 = dll.NewProc("SetServiceBits")
+	procSetServiceStatus               = dll.NewProc("SetServiceStatus")
+	procStartServiceCtrlDispatcher     = dll.NewProc("StartServiceCtrlDispatcherW")
+	procChangeServiceConfig            = dll.NewProc("ChangeServiceConfigW")
+	procChangeServiceConfig2           = dll.NewProc("ChangeServiceConfig2W")
+	procCloseServiceHandle             = dll.NewProc("CloseServiceHandle")
+	procControlService                 = dll.NewProc("ControlService")
+	procControlServiceEx               = dll.NewProc("ControlServiceExW")
+	procCreateService                  = dll.NewProc("CreateServiceW")
+	procDeleteService                  = dll.NewProc("DeleteService")
+	procEnumDependentServices          = dll.NewProc("EnumDependentServicesW")
+	procEnumServicesStatusEx           = dll.NewProc("EnumServicesStatusExW")
+	procGetServiceDisplayName          = dll.NewProc("GetServiceDisplayNameW")
+	procGetServiceKeyName              = dll.NewProc("GetServiceKeyNameW")
+	procNotifyBootConfigStatus         = dll.NewProc("NotifyBootConfigStatus")
+	procNotifyServiceStatusChange      = dll.NewProc("NotifyServiceStatusChange")
+	procOpenSCManager                  = dll.NewProc("OpenSCManagerW")
+	procOpenService                    = dll.NewProc("OpenServiceW")
+	procQueryServiceConfig             = dll.NewProc("QueryServiceConfigW")
+	procQueryServiceConfig2            = dll.NewProc("QueryServiceConfig2W")
+	procQueryServiceDynamicInformation = dll.NewProc("QueryServiceDynamicInformation")
+	procQueryServiceStatus             = dll.NewProc("QueryServiceStatus")
+	procQueryServiceStatusEx           = dll.NewProc("QueryServiceStatusEx")
+	procStartService                   = dll.NewProc("StartServiceW")
+	procEnumServicesStatus             = dll.NewProc("EnumServicesStatusW")
+	procLockServiceDatabase            = dll.NewProc("LockServiceDatabase")
+	procQueryServiceLockStatus         = dll.NewProc("QueryServiceLockStatusW")
+	procUnlockServiceDatabase          = dll.NewProc("UnlockServiceDatabase")
+)

@@ -213,9 +213,11 @@ type (
 	LPCVOID         unsafe.Pointer
 	LRESULT         uintptr
 	PVOID           unsafe.Pointer
+	BYTE            byte
 	QPC_TIME        uint64
 	SIZE_T          uintptr
 	TRACEHANDLE     uintptr
+	UINT            uint32
 	ULONG_PTR       uintptr
 	WPARAM          uintptr
 )
