@@ -125,6 +125,7 @@ type SERVICE_STATUS_PROCESS struct {
 	DwServiceFlags            ServiceFlags
 }
 
+// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-closeservicehandle
 func CloseServiceHandle(hSCObject SC_HANDLE) (bool, error) {
 	ret, _, _ := procCloseServiceHandle.Call(uintptr(hSCObject))
 	if ret == 0 {
@@ -133,6 +134,7 @@ func CloseServiceHandle(hSCObject SC_HANDLE) (bool, error) {
 	return true, nil
 }
 
+// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
 func OpenSCManager(lpMachineName, lpDatabaseName string, dwDesiredAccess SCManagerAccess) SC_HANDLE {
 	var p1, p2 uintptr
 
@@ -161,6 +163,7 @@ func OpenSCManager(lpMachineName, lpDatabaseName string, dwDesiredAccess SCManag
 	return SC_HANDLE(ret)
 }
 
+// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
 func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess ServiceAccess) SC_HANDLE {
 	a2, err := syscall.UTF16PtrFromString(lpServiceName)
 	if err != nil {
@@ -176,6 +179,7 @@ func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess Ser
 	return SC_HANDLE(ret)
 }
 
+// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatus
 func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) bool {
 	ret, _, _ := procQueryServiceStatus.Call(
 		uintptr(hService),
@@ -185,6 +189,7 @@ func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) boo
 	return ret != 0
 }
 
+// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex
 func QueryServiceStatusEx(hService SC_HANDLE, InfoLevel SC_STATUS_TYPE, lpBuffer *SERVICE_STATUS_PROCESS,
 	cbBufSize typedef.DWORD, pcbBytesNeeded *typedef.DWORD) bool {
 	ret, _, _ := procQueryServiceStatusEx.Call(
