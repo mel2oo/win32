@@ -1,4 +1,4 @@
-module win32
+module github.com/switch-li/win32
 
 go 1.16
 

@@ -1,10 +1,10 @@
 package advapi32
 
 import (
-	"errors"
 	"syscall"
 	"unsafe"
-	"win32/typedef"
+
+	"github.com/switch-li/win32/typedef"
 )
 
 type SC_HANDLE typedef.HANDLE
@@ -54,6 +54,55 @@ const (
 	SC_STATUS_PROCESS_INFO SC_STATUS_TYPE = iota
 )
 
+type ServiceType typedef.DWORD
+
+const (
+	SERVICE_KERNEL_DRIVER       ServiceType = 0x00000001
+	SERVICE_FILE_SYSTEM_DRIVER  ServiceType = 0x00000002
+	SERVICE_ADAPTER             ServiceType = 0x00000004
+	SERVICE_RECOGNIZER_DRIVER   ServiceType = 0x00000008
+	SERVICE_DRIVER              ServiceType = 0x0000000B
+	SERVICE_WIN32_OWN_PROCESS   ServiceType = 0x00000010
+	SERVICE_WIN32_SHARE_PROCESS ServiceType = 0x00000020
+	SERVICE_INTERACTIVE_PROCESS ServiceType = 0x00000100
+	SERVICE_WIN32               ServiceType = 0x00000030
+	SERVICE_NO_CHANGE           ServiceType = 0xffffffff
+)
+
+type ServiceCurrentState typedef.DWORD
+
+const (
+	SERVICE_STOPPED          ServiceCurrentState = 0x00000001
+	SERVICE_START_PENDING    ServiceCurrentState = 0x00000002
+	SERVICE_STOP_PENDING     ServiceCurrentState = 0x00000003
+	SERVICE_RUNNING          ServiceCurrentState = 0x00000004
+	SERVICE_CONTINUE_PENDING ServiceCurrentState = 0x00000005
+	SERVICE_PAUSE_PENDING    ServiceCurrentState = 0x00000006
+	SERVICE_PAUSED           ServiceCurrentState = 0x00000007
+)
+
+type ServiceAcceptControls typedef.DWORD
+
+const (
+	SERVICE_ACCEPT_STOP                  ServiceAcceptControls = 0x00000001
+	SERVICE_ACCEPT_PAUSE_CONTINUE        ServiceAcceptControls = 0x00000002
+	SERVICE_ACCEPT_SHUTDOWN              ServiceAcceptControls = 0x00000004
+	SERVICE_ACCEPT_PARAMCHANGE           ServiceAcceptControls = 0x00000008
+	SERVICE_ACCEPT_NETBINDCHANGE         ServiceAcceptControls = 0x00000010
+	SERVICE_ACCEPT_HARDWAREPROFILECHANGE ServiceAcceptControls = 0x00000020
+	SERVICE_ACCEPT_POWEREVENT            ServiceAcceptControls = 0x00000040
+	SERVICE_ACCEPT_SESSIONCHANGE         ServiceAcceptControls = 0x00000080
+	SERVICE_ACCEPT_PRESHUTDOWN           ServiceAcceptControls = 0x00000100
+	SERVICE_ACCEPT_TIMECHANGE            ServiceAcceptControls = 0x00000200
+	SERVICE_ACCEPT_TRIGGEREVENT          ServiceAcceptControls = 0x00000400
+)
+
+type ServiceFlags typedef.DWORD
+
+const (
+	SERVICE_RUNS_IN_SYSTEM_PROCESS ServiceFlags = 0x00000001
+)
+
 type SERVICE_STATUS struct {
 	DwServiceType             uint32
 	DwCurrentState            uint32
@@ -64,6 +113,18 @@ type SERVICE_STATUS struct {
 	DwWaitHint                uint32
 }
 
+type SERVICE_STATUS_PROCESS struct {
+	DwServiceType             ServiceType
+	DwCurrentState            ServiceCurrentState
+	DwControlsAccepted        ServiceAcceptControls
+	DwWin32ExitCode           typedef.DWORD
+	DwServiceSpecificExitCode typedef.DWORD
+	DwCheckPoint              typedef.DWORD
+	DwWaitHint                typedef.DWORD
+	DwProcessId               typedef.DWORD
+	DwServiceFlags            ServiceFlags
+}
+
 func CloseServiceHandle(hSCObject SC_HANDLE) (bool, error) {
 	ret, _, _ := procCloseServiceHandle.Call(uintptr(hSCObject))
 	if ret == 0 {
@@ -72,34 +133,38 @@ func CloseServiceHandle(hSCObject SC_HANDLE) (bool, error) {
 	return true, nil
 }
 
-func OpenSCManager(lpMachineName, lpDatabaseName string, dwDesiredAccess SCManagerAccess) (SC_HANDLE, error) {
-	a1, err := syscall.UTF16PtrFromString(lpMachineName)
-	if err != nil {
-		return 0, err
+func OpenSCManager(lpMachineName, lpDatabaseName string, dwDesiredAccess SCManagerAccess) SC_HANDLE {
+	var p1, p2 uintptr
+
+	if len(lpMachineName) > 0 {
+		a1, err := syscall.UTF16PtrFromString(lpMachineName)
+		if err != nil {
+			return 0
+		}
+		p1 = uintptr(unsafe.Pointer(a1))
 	}
 
-	a2, err := syscall.UTF16PtrFromString(lpDatabaseName)
-	if err != nil {
-		return 0, err
+	if len(lpDatabaseName) > 0 {
+		a2, err := syscall.UTF16PtrFromString(lpDatabaseName)
+		if err != nil {
+			return 0
+		}
+		p2 = uintptr(unsafe.Pointer(a2))
 	}
 
 	ret, _, _ := procOpenSCManager.Call(
-		uintptr(unsafe.Pointer(a1)),
-		uintptr(unsafe.Pointer(a2)),
+		p1,
+		p2,
 		uintptr(dwDesiredAccess),
 	)
 
-	if ret == 0 {
-		return 0, syscall.GetLastError()
-	}
-
-	return SC_HANDLE(ret), nil
+	return SC_HANDLE(ret)
 }
 
-func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess ServiceAccess) (SC_HANDLE, error) {
+func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess ServiceAccess) SC_HANDLE {
 	a2, err := syscall.UTF16PtrFromString(lpServiceName)
 	if err != nil {
-		return 0, err
+		return 0
 	}
 
 	ret, _, _ := procOpenService.Call(
@@ -108,32 +173,20 @@ func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess Ser
 		uintptr(dwDesiredAccess),
 	)
 
-	if ret == 0 {
-		return 0, syscall.GetLastError()
-	}
-
-	return SC_HANDLE(ret), nil
+	return SC_HANDLE(ret)
 }
 
-func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) (bool, error) {
-	if lpServiceStatus == nil {
-		return false, errors.New("")
-	}
-
+func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) bool {
 	ret, _, _ := procQueryServiceStatus.Call(
 		uintptr(hService),
 		uintptr(unsafe.Pointer(lpServiceStatus)),
 	)
 
-	if ret == 0 {
-		return false, syscall.GetLastError()
-	}
-
-	return true, nil
+	return ret != 0
 }
 
-func QueryServiceStatusEx(hService SC_HANDLE, InfoLevel SC_STATUS_TYPE, lpBuffer *typedef.BYTE,
-	cbBufSize typedef.DWORD, pcbBytesNeeded *typedef.DWORD) (bool, error) {
+func QueryServiceStatusEx(hService SC_HANDLE, InfoLevel SC_STATUS_TYPE, lpBuffer *SERVICE_STATUS_PROCESS,
+	cbBufSize typedef.DWORD, pcbBytesNeeded *typedef.DWORD) bool {
 	ret, _, _ := procQueryServiceStatusEx.Call(
 		uintptr(hService),
 		uintptr(InfoLevel),
@@ -142,9 +195,5 @@ func QueryServiceStatusEx(hService SC_HANDLE, InfoLevel SC_STATUS_TYPE, lpBuffer
 		uintptr(unsafe.Pointer(pcbBytesNeeded)),
 	)
 
-	if ret == 0 {
-		return false, syscall.GetLastError()
-	}
-
-	return true, nil
+	return ret != 0
 }
