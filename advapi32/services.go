@@ -126,12 +126,9 @@ type SERVICE_STATUS_PROCESS struct {
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-closeservicehandle
-func CloseServiceHandle(hSCObject SC_HANDLE) (bool, error) {
+func CloseServiceHandle(hSCObject SC_HANDLE) typedef.BOOL {
 	ret, _, _ := procCloseServiceHandle.Call(uintptr(hSCObject))
-	if ret == 0 {
-		return false, syscall.GetLastError()
-	}
-	return true, nil
+	return typedef.BOOL(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
@@ -180,18 +177,18 @@ func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess Ser
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatus
-func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) bool {
+func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) typedef.BOOL {
 	ret, _, _ := procQueryServiceStatus.Call(
 		uintptr(hService),
 		uintptr(unsafe.Pointer(lpServiceStatus)),
 	)
 
-	return ret != 0
+	return typedef.BOOL(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex
 func QueryServiceStatusEx(hService SC_HANDLE, InfoLevel SC_STATUS_TYPE, lpBuffer *SERVICE_STATUS_PROCESS,
-	cbBufSize typedef.DWORD, pcbBytesNeeded *typedef.DWORD) bool {
+	cbBufSize typedef.DWORD, pcbBytesNeeded *typedef.DWORD) typedef.BOOL {
 	ret, _, _ := procQueryServiceStatusEx.Call(
 		uintptr(hService),
 		uintptr(InfoLevel),
@@ -200,5 +197,5 @@ func QueryServiceStatusEx(hService SC_HANDLE, InfoLevel SC_STATUS_TYPE, lpBuffer
 		uintptr(unsafe.Pointer(pcbBytesNeeded)),
 	)
 
-	return ret != 0
+	return typedef.BOOL(ret)
 }

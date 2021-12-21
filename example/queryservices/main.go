@@ -24,12 +24,12 @@ func main() {
 	var ssStatus advapi32.SERVICE_STATUS_PROCESS
 	var dwBytesNeeded typedef.DWORD
 
-	if !advapi32.QueryServiceStatusEx(
+	if advapi32.QueryServiceStatusEx(
 		srvhandler,
 		advapi32.SC_STATUS_PROCESS_INFO,
 		&ssStatus,
 		typedef.DWORD(unsafe.Sizeof(ssStatus)),
-		&dwBytesNeeded) {
+		&dwBytesNeeded) == typedef.FALSE {
 		return
 	}
 

@@ -4,10 +4,6 @@
 
 package typedef
 
-import (
-	"unsafe"
-)
-
 // From MSDN: Windows Data Types
 // http://msdn.microsoft.com/en-us/library/s3f49ktz.aspx
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa383751.aspx
@@ -175,49 +171,15 @@ import (
 // WCHAR                 uint16
 // WORD                  uint16
 // WPARAM                UINT_PTR
+
+const (
+	TRUE  = BOOL(1)
+	FALSE = BOOL(0)
+)
+
 type (
-	ATOM            uint16
-	BOOL            int32
-	COLORREF        uint32
-	DWM_FRAME_COUNT uint64
-	DWORD           uint32
-	HACCEL          HANDLE
-	HANDLE          uintptr
-	HBITMAP         HANDLE
-	HBRUSH          HANDLE
-	HCURSOR         HANDLE
-	HDC             HANDLE
-	HDROP           HANDLE
-	HDWP            HANDLE
-	HENHMETAFILE    HANDLE
-	HFONT           HANDLE
-	HGDIOBJ         HANDLE
-	HGLOBAL         HANDLE
-	HGLRC           HANDLE
-	HHOOK           HANDLE
-	HICON           HANDLE
-	HIMAGELIST      HANDLE
-	HINSTANCE       HANDLE
-	HKEY            HANDLE
-	HKL             HANDLE
-	HMENU           HANDLE
-	HMODULE         HANDLE
-	HMONITOR        HANDLE
-	HPEN            HANDLE
-	HRESULT         int32
-	HRGN            HANDLE
-	HRSRC           HANDLE
-	HTHUMBNAIL      HANDLE
-	HWND            HANDLE
-	LPARAM          uintptr
-	LPCVOID         unsafe.Pointer
-	LRESULT         uintptr
-	PVOID           unsafe.Pointer
-	BYTE            byte
-	QPC_TIME        uint64
-	SIZE_T          uintptr
-	TRACEHANDLE     uintptr
-	UINT            uint32
-	ULONG_PTR       uintptr
-	WPARAM          uintptr
+	BOOL   int32
+	UINT   uint32
+	DWORD  uint32
+	HANDLE uintptr
 )
