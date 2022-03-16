@@ -4,7 +4,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/switch-li/win32/typedef"
+	"github.com/mel2oo/win32/typedef"
 )
 
 type SC_HANDLE typedef.HANDLE

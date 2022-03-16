@@ -1,7 +1,7 @@
 package kernel32
 
 import (
-	"github.com/switch-li/win32/typedef"
+	"github.com/mel2oo/win32/typedef"
 )
 
 func GetLastError() typedef.ERROR_CODE {

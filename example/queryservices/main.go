@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/switch-li/win32/advapi32"
-	"github.com/switch-li/win32/typedef"
+	"github.com/mel2oo/win32/advapi32"
+	"github.com/mel2oo/win32/typedef"
 )
 
 func main() {
