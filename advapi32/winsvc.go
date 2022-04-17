@@ -1,3 +1,8 @@
+//go:build windows
+// +build windows
+
+// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/
+
 package advapi32
 
 import (
