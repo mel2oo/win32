@@ -10,10 +10,16 @@ const (
 )
 
 type (
-	BOOL   int32
-	UINT   uint32
-	DWORD  uint32
-	HANDLE uintptr
+	BOOL    int32
+	BYTE    byte
+	UINT    uint32
+	WORD    uint16
+	DWORD   uint32
+	LPDWORD *DWORD
+	PVOID   uintptr
+	HANDLE  PVOID
+	HKEY    HANDLE
+	PHKEY   *HKEY
 )
 
 // ATOM                  WORD
