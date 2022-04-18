@@ -70,3 +70,28 @@ func InitiateSystemShutdown(lpMachineName, lpMessage string, dwTimeout typedef.D
 
 	return typedef.BOOL(ret)
 }
+
+// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-initiatesystemshutdownexw
+func InitiateSystemShutdownEx(lpMachineName, lpMessage string, dwTimeout typedef.DWORD,
+	bForceAppsClosed, bRebootAfterShutdown typedef.BOOL, dwReason typedef.DWORD) typedef.BOOL {
+	a1, err := syscall.UTF16PtrFromString(lpMachineName)
+	if err != nil {
+		return 0
+	}
+
+	a2, err := syscall.UTF16PtrFromString(lpMessage)
+	if err != nil {
+		return 0
+	}
+
+	ret, _, _ := procInitiateSystemShutdownEx.Call(
+		uintptr(unsafe.Pointer(a1)),
+		uintptr(unsafe.Pointer(a2)),
+		uintptr(dwTimeout),
+		uintptr(bForceAppsClosed),
+		uintptr(bRebootAfterShutdown),
+		uintptr(dwReason),
+	)
+
+	return typedef.BOOL(ret)
+}
