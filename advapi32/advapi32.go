@@ -13,8 +13,8 @@ var (
 	// winreg.h
 	procAbortSystemShutdown         = dll.NewProc("AbortSystemShutdownW")
 	procInitiateShutdown            = dll.NewProc("InitiateShutdownW")
-	procInitiateSystemShutdownEx    = dll.NewProc("InitiateSystemShutdownExW")
 	procInitiateSystemShutdown      = dll.NewProc("InitiateSystemShutdownW")
+	procInitiateSystemShutdownEx    = dll.NewProc("InitiateSystemShutdownExW")
 	procRegCloseKey                 = dll.NewProc("RegCloseKey")
 	procRegConnectRegistry          = dll.NewProc("RegConnectRegistryW")
 	procRegCopyTree                 = dll.NewProc("RegCopyTreeW")

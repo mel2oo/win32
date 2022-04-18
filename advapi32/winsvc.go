@@ -167,14 +167,14 @@ func OpenSCManager(lpMachineName, lpDatabaseName string, dwDesiredAccess SCManag
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
 func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess ServiceAccess) SC_HANDLE {
-	a2, err := syscall.UTF16PtrFromString(lpServiceName)
+	a1, err := syscall.UTF16PtrFromString(lpServiceName)
 	if err != nil {
 		return 0
 	}
 
 	ret, _, _ := procOpenService.Call(
 		uintptr(hSCManager),
-		uintptr(unsafe.Pointer(a2)),
+		uintptr(unsafe.Pointer(a1)),
 		uintptr(dwDesiredAccess),
 	)
 

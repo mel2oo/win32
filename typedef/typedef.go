@@ -1,12 +1,21 @@
-// Copyright 2010-2012 The W32 Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 package typedef
 
 // From MSDN: Windows Data Types
 // http://msdn.microsoft.com/en-us/library/s3f49ktz.aspx
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa383751.aspx
+
+const (
+	TRUE  = BOOL(1)
+	FALSE = BOOL(0)
+)
+
+type (
+	BOOL   int32
+	UINT   uint32
+	DWORD  uint32
+	HANDLE uintptr
+)
+
 // ATOM                  WORD
 // BOOL                  int32
 // BOOLEAN               byte
@@ -171,15 +180,3 @@ package typedef
 // WCHAR                 uint16
 // WORD                  uint16
 // WPARAM                UINT_PTR
-
-const (
-	TRUE  = BOOL(1)
-	FALSE = BOOL(0)
-)
-
-type (
-	BOOL   int32
-	UINT   uint32
-	DWORD  uint32
-	HANDLE uintptr
-)
