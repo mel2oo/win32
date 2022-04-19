@@ -16,10 +16,18 @@ type (
 	WORD    uint16
 	DWORD   uint32
 	LPDWORD *DWORD
+	LONG    int32
+	ULONG   uint32
+	ULONG64 uint64
 	PVOID   uintptr
 	HANDLE  PVOID
-	HKEY    HANDLE
-	PHKEY   *HKEY
+
+	GUID struct {
+		Data1 uint32
+		Data2 uint16
+		Data3 uint16
+		Data4 [8]byte
+	}
 )
 
 // ATOM                  WORD

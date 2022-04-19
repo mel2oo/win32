@@ -12,6 +12,25 @@ import (
 	"github.com/mel2oo/win32/typedef"
 )
 
+type (
+	HKEY  typedef.HANDLE
+	PHKEY *HKEY
+)
+
+// HKEY
+const (
+	HKEY_CLASSES_ROOT                = -2147483648
+	HKEY_CURRENT_USER                = -2147483647
+	HKEY_LOCAL_MACHINE               = -2147483646
+	HKEY_USERS                       = -2147483645
+	HKEY_PERFORMANCE_DATA            = -2147483644
+	HKEY_PERFORMANCE_TEXT            = -2147483568
+	HKEY_PERFORMANCE_NLSTEXT         = -2147483552
+	HKEY_CURRENT_CONFIG              = -2147483643
+	HKEY_DYN_DATA                    = -2147483642
+	HKEY_CURRENT_USER_LOCAL_SETTINGS = -2147483641
+)
+
 type REGSAM typedef.DWORD
 
 const (
@@ -120,13 +139,13 @@ func InitiateSystemShutdownEx(lpMachineName, lpMessage string, dwTimeout typedef
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey
-func RegCloseKey(hKey typedef.HKEY) typedef.LSTATUS {
+func RegCloseKey(hKey HKEY) typedef.LSTATUS {
 	ret, _, _ := procRegCloseKey.Call(uintptr(hKey))
 	return typedef.LSTATUS(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regconnectregistryw
-func RegConnectRegistry(lpMachineName string, hKey typedef.HKEY, phkResult *typedef.HKEY) typedef.LSTATUS {
+func RegConnectRegistry(lpMachineName string, hKey HKEY, phkResult *HKEY) typedef.LSTATUS {
 	a1, err := syscall.UTF16PtrFromString(lpMachineName)
 	if err != nil {
 		return typedef.LSTATUS(typedef.ERROR_INVALID_PARAMETER)
@@ -142,7 +161,7 @@ func RegConnectRegistry(lpMachineName string, hKey typedef.HKEY, phkResult *type
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcopytreew
-func RegCopyTree(hKeySrc typedef.HKEY, lpSubKey string, hKeyDest typedef.HKEY) typedef.LSTATUS {
+func RegCopyTree(hKeySrc HKEY, lpSubKey string, hKeyDest HKEY) typedef.LSTATUS {
 	a1, err := syscall.UTF16PtrFromString(lpSubKey)
 	if err != nil {
 		return typedef.LSTATUS(typedef.ERROR_INVALID_PARAMETER)
@@ -159,11 +178,11 @@ func RegCopyTree(hKeySrc typedef.HKEY, lpSubKey string, hKeyDest typedef.HKEY) t
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcreatekeyexw
 func RegCreateKeyEx(
-	hKey typedef.HKEY, lpSubKey string,
+	hKey HKEY, lpSubKey string,
 	Reserved typedef.DWORD, lpClass string,
 	dwOptions typedef.DWORD, samDesired REGSAM,
 	lpSecurityAttributes typedef.LPSECURITY_ATTRIBUTES,
-	phkResult typedef.PHKEY, lpdwDisposition typedef.LPDWORD) typedef.LSTATUS {
+	phkResult PHKEY, lpdwDisposition typedef.LPDWORD) typedef.LSTATUS {
 	a1, err := syscall.UTF16PtrFromString(lpSubKey)
 	if err != nil {
 		return typedef.LSTATUS(typedef.ERROR_INVALID_PARAMETER)
