@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/xml"
 	"flag"
-	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -38,8 +37,5 @@ func main() {
 		if err = xml.Unmarshal(data, v); err != nil {
 			panic(err)
 		}
-
-		fmt.Println()
 	}
-
 }
