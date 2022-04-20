@@ -1,13 +1,17 @@
-package main
+package api
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
-type Parser interface {
-	P()
-}
+const (
+	Win32Dir  = "API/Windows"
+	HeaderDir = "API/Headers"
+)
 
 // Api xml
-type ApiXml struct {
+type Win32Xml struct {
+	File    string
 	Root    xml.Name  `xml:"ApiMonitor"`
 	Include []Include `xml:"Include"`
 	Module  Module    `xml:"Module"`
@@ -56,20 +60,22 @@ type Success struct {
 type Type string
 
 const (
-	Integer          Type = "Integer"
-	ModuleHandle     Type = "ModuleHandle"
-	Pointer          Type = "Pointer"
-	Alias            Type = "Alias"
-	Void             Type = "Void"
-	Struct           Type = "Struct"
-	Union            Type = "Union"
-	Array            Type = "Array"
-	Floating         Type = "Floating"
-	Guid             Type = "Guid"
-	Interface        Type = "Interface"
-	Character        Type = "Character"
-	UnicodeCharacter Type = "UnicodeCharacter"
-	TCharacter       Type = "TCharacter"
+	_Integer          Type = "Integer"
+	_ModuleHandle     Type = "ModuleHandle"
+	_Pointer          Type = "Pointer"
+	_Alias            Type = "Alias"
+	_Void             Type = "Void"
+	_Struct           Type = "Struct"
+	_Enum             Type = "Enum"
+	_FLAG             Type = "flag"
+	_Union            Type = "Union"
+	_Array            Type = "Array"
+	_Floating         Type = "Floating"
+	_Guid             Type = "Guid"
+	_Interface        Type = "Interface"
+	_Character        Type = "Character"
+	_UnicodeCharacter Type = "UnicodeCharacter"
+	_TCharacter       Type = "TCharacter"
 )
 
 type Variable struct {
@@ -107,6 +113,7 @@ type Set struct {
 
 // Header xml
 type HeaderXml struct {
+	File    string
 	Root    xml.Name  `xml:"ApiMonitor"`
 	HelpUrl []HelpUrl `xml:"HelpUrl"`
 	Include []Include `xml:"Include"`
@@ -148,3 +155,44 @@ type Variable1 struct {
 	Size     Size   `xml:"Size,attr"`
 	Unsigned bool   `xml:"Unsigned,attr"`
 }
+
+// const (
+// 	_pkg = "package main\n"
+// )
+
+// func (a *ApiXml) deeparse() error {
+// 	for _, inc := range a.Include {
+// 		file := fmt.Sprintf("API\\%s", inc.Filename)
+
+// 		data, err := os.ReadFile(file)
+// 		if err != nil {
+// 			return err
+// 		}
+
+// 		v := new(HeaderXml)
+// 		if err = xml.Unmarshal(data, v); err != nil {
+// 			return err
+// 		}
+// 	}
+
+// 	return nil
+// }
+
+// func (a *ApiXml) makefile() {
+// 	data := _pkg
+
+// 	for _, v := range a.Module.Variable {
+// 		switch v.Type {
+// 		case _Struct:
+// 			h := fmt.Sprintf("\ntype %s struct {", v.Name)
+// 			for _, vv := range v.Field {
+// 				h += fmt.Sprintf("\n	%s %s", vv.Name, vv.Type)
+// 			}
+// 			h += "\n}\n"
+// 			data += h
+// 		case _Enum:
+// 			h := fmt.Sprintf("type %s %s", v.Type)
+// 		case _FLAG:
+// 		}
+// 	}
+// }
