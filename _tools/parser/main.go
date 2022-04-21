@@ -81,6 +81,7 @@ func parse() (err error) {
 
 		for _, vv := range v.Headers.Variable {
 			fmt.Println(vv)
+			// todo
 		}
 
 		hmap[v.File] = h
