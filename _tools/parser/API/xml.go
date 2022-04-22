@@ -60,33 +60,36 @@ type Success struct {
 type Type string
 
 const (
-	_Integer          Type = "Integer"
-	_ModuleHandle     Type = "ModuleHandle"
-	_Pointer          Type = "Pointer"
-	_Alias            Type = "Alias"
-	_Void             Type = "Void"
-	_Struct           Type = "Struct"
-	_Enum             Type = "Enum"
-	_FLAG             Type = "flag"
-	_Union            Type = "Union"
-	_Array            Type = "Array"
-	_Floating         Type = "Floating"
-	_Guid             Type = "Guid"
-	_Interface        Type = "Interface"
-	_Character        Type = "Character"
-	_UnicodeCharacter Type = "UnicodeCharacter"
-	_TCharacter       Type = "TCharacter"
+	TypeInteger          Type = "Integer"
+	TypeModuleHandle     Type = "ModuleHandle"
+	TypePointer          Type = "Pointer"
+	TypeAlias            Type = "Alias"
+	TypeVoid             Type = "Void"
+	TypeStruct           Type = "Struct"
+	TypeEnum             Type = "Enum"
+	TypeFLAG             Type = "flag"
+	TypeUnion            Type = "Union"
+	TypeArray            Type = "Array"
+	TypeFloating         Type = "Floating"
+	TypeGuid             Type = "Guid"
+	TypeInterface        Type = "Interface"
+	TypeCharacter        Type = "Character"
+	TypeUnicodeCharacter Type = "UnicodeCharacter"
+	TypeTCharacter       Type = "TCharacter"
 )
 
 type Variable struct {
-	Name    string  `xml:"Name,attr"`
-	Type    Type    `xml:"Type,attr"`
-	Base    string  `xml:"Base,attr"`
-	Count   string  `xml:"Count,attr"`
-	Display Display `xml:"Display"`
-	Field   []Field `xml:"Field"`
-	Enum    Enum    `xml:"Enum"`
-	Flag    Flag    `xml:"Flag"`
+	Name       string  `xml:"Name,attr"`
+	Type       Type    `xml:"Type,attr"`
+	Base       string  `xml:"Base,attr"`
+	Size       int     `xml:"Size,attr"`
+	Unsigned   bool    `xml:"Unsigned,attr"`
+	DisplayHex bool    `xml:"DisplayHex,attr"`
+	Count      string  `xml:"Count,attr"`
+	Display    Display `xml:"Display"`
+	Field      []Field `xml:"Field"`
+	Enum       Enum    `xml:"Enum"`
+	Flag       Flag    `xml:"Flag"`
 }
 
 type Display struct {
@@ -139,21 +142,7 @@ const (
 
 type Condition struct {
 	Architecture Architecture `xml:"Architecture,attr"`
-	Variable1    []Variable1  `xml:"Variable"`
-}
-
-type Size int
-
-const (
-	Size4 Size = 4
-	Size8 Size = 8
-)
-
-type Variable1 struct {
-	Name     string `xml:"Name,attr"`
-	Type     Type   `xml:"Type,attr"`
-	Size     Size   `xml:"Size,attr"`
-	Unsigned bool   `xml:"Unsigned,attr"`
+	Variable1    []Variable   `xml:"Variable"`
 }
 
 // const (

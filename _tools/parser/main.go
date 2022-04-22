@@ -82,6 +82,8 @@ func parse() (err error) {
 		for _, vv := range v.Headers.Variable {
 			fmt.Println(vv)
 			// todo
+
+			
 		}
 
 		hmap[v.File] = h
@@ -90,12 +92,20 @@ func parse() (err error) {
 	return
 }
 
+var (
+	headerMap = map[string]Header
+	win32Map = map[string]Win32
+)
+
+func init(){
+	headerMap = make(map[string]Header)
+	win32Map = make(map[string]Win32)
+}
+
 type Header struct {
 	Includes  []string
 	Variables []Variable
 }
-
-type Variable struct{}
 
 type Win32 struct {
 	Includes  []string
