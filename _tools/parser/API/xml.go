@@ -85,7 +85,7 @@ type Variable struct {
 	Size       int     `xml:"Size,attr"`
 	Unsigned   bool    `xml:"Unsigned,attr"`
 	DisplayHex bool    `xml:"DisplayHex,attr"`
-	Count      string  `xml:"Count,attr"`
+	Count      int     `xml:"Count,attr"`
 	Display    Display `xml:"Display"`
 	Field      []Field `xml:"Field"`
 	Enum       Enum    `xml:"Enum"`
@@ -142,46 +142,5 @@ const (
 
 type Condition struct {
 	Architecture Architecture `xml:"Architecture,attr"`
-	Variable1    []Variable   `xml:"Variable"`
+	Variable     []Variable   `xml:"Variable"`
 }
-
-// const (
-// 	_pkg = "package main\n"
-// )
-
-// func (a *ApiXml) deeparse() error {
-// 	for _, inc := range a.Include {
-// 		file := fmt.Sprintf("API\\%s", inc.Filename)
-
-// 		data, err := os.ReadFile(file)
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		v := new(HeaderXml)
-// 		if err = xml.Unmarshal(data, v); err != nil {
-// 			return err
-// 		}
-// 	}
-
-// 	return nil
-// }
-
-// func (a *ApiXml) makefile() {
-// 	data := _pkg
-
-// 	for _, v := range a.Module.Variable {
-// 		switch v.Type {
-// 		case _Struct:
-// 			h := fmt.Sprintf("\ntype %s struct {", v.Name)
-// 			for _, vv := range v.Field {
-// 				h += fmt.Sprintf("\n	%s %s", vv.Name, vv.Type)
-// 			}
-// 			h += "\n}\n"
-// 			data += h
-// 		case _Enum:
-// 			h := fmt.Sprintf("type %s %s", v.Type)
-// 		case _FLAG:
-// 		}
-// 	}
-// }
