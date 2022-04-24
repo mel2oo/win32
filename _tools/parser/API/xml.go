@@ -85,8 +85,14 @@ type Display struct {
 }
 
 type Field struct {
-	Type string `xml:"Type,attr"`
-	Name string `xml:"Name,attr"`
+	Type       string `xml:"Type,attr"`
+	Name       string `xml:"Name,attr"`
+	Count      string `xml:"Count,attr"`
+	PostCount  string `xml:"PostCount,attr"`
+	Length     string `xml:"Length,attr"`
+	PostLength string `xml:"PostLength,attr"`
+	Display    string `xml:"Display,attr"`
+	OutputOnly bool   `xml:"OutputOnly,attr"`
 }
 
 type Enum struct {
