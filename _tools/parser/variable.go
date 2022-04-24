@@ -6,90 +6,123 @@ import (
 	"github.com/mel2oo/win32/_tools/parser/api"
 )
 
+var vbs map[string]Variable
+
+func init() {
+	vbs = make(map[string]Variable)
+}
+
 type Variable interface {
 	Name() string
 	Base() Variable
 	Size() int
+	Pack() int
 }
 
 func GetVariable(v api.Variable) Variable {
+	var vb Variable
+
 	switch v.Type {
 	case api.TypeInteger:
-		return &VarTypeInteger{
-			name: v.Name,
-			// base:
+		vb = &VarTypeInteger{
+			name:       v.Name,
 			size:       v.Size,
+			unsigned:   v.Unsigned,
 			displayhex: v.DisplayHex,
 		}
 
 	case api.TypeModuleHandle:
-		return &VarTypeModuleHandle{
+		vb = &VarTypeModuleHandle{
 			name: v.Name,
 		}
 
 	case api.TypePointer:
-		return &VarTypePointer{
+		vb = &VarTypePointer{
 			name: v.Name,
-			// base:
+			base: vbs[v.Base],
 		}
 
 	case api.TypeAlias:
-		return &VarTypeAlias{
-			name: v.Name,
-			// base:
+		vb = &VarTypeAlias{
+			name:    v.Name,
+			base:    vbs[v.Base],
 			display: v.Display.Name,
 		}
 
 	case api.TypeVoid:
-		return &VarTypeVoid{
+		vb = &VarTypeVoid{
 			name: v.Name,
 		}
 
 	case api.TypeCharacter:
-		return &VarTypeCharacter{
+		vb = &VarTypeCharacter{
 			name: v.Name,
 		}
 
 	case api.TypeUnicodeCharacter:
-		return &VarTypeUnicodeCharacter{
+		vb = &VarTypeUnicodeCharacter{
 			name: v.Name,
 		}
 
 	case api.TypeTCharacter:
-		return &VarTypeTCharacter{
+		vb = &VarTypeTCharacter{
 			name: v.Name,
 		}
 
 	case api.TypeFloating:
-		return &VarTypeFloating{
+		vb = &VarTypeFloating{
 			name: v.Name,
 			size: v.Size,
 		}
 
 	case api.TypeArray:
-		return &VarTypeArray{
-			name: v.Name,
-			// base:
+		vb = &VarTypeArray{
+			name:  v.Name,
+			base:  vbs[v.Base],
 			count: v.Count,
 		}
 
 	case api.TypeInterface:
-		return &VarTypeInterface{
+		vb = &VarTypeInterface{
 			name: v.Name,
 		}
 
 	case api.TypeStruct:
-		return &VarTypeStruct{
-			name: v.Name,
+		fields := make([]Field, 0)
+		for _, f := range v.Field {
+			fields = append(fields, Field{
+				name: f.Name,
+				base: vbs[f.Type],
+			})
 		}
+
+		vv := &VarTypeStruct{
+			name:   v.Name,
+			fields: fields,
+		}
+
+		vv.Init()
+		vb = vv
 
 	case api.TypeUnion:
-		return &VarTypeUnion{
-			name: v.Name,
+		fields := make([]Field, 0)
+		for _, f := range v.Field {
+			fields = append(fields, Field{
+				name: f.Name,
+				base: vbs[f.Type],
+			})
 		}
 
+		vv := &VarTypeUnion{
+			name:   v.Name,
+			fields: fields,
+		}
+
+		vv.Init()
+		vb = vv
+
 	case api.TypeGuid:
-		return &VarTypeGuid{
+		vb = &VarTypeGuid{
 			name: v.Name,
 		}
 
@@ -97,6 +130,9 @@ func GetVariable(v api.Variable) Variable {
 		fmt.Println("undefine type", v.Type)
 		return nil
 	}
+
+	vbs[v.Name] = vb
+	return vb
 }
 
 type VarTypeInteger struct {
@@ -118,6 +154,10 @@ func (v *VarTypeInteger) Size() int {
 	return v.size
 }
 
+func (v *VarTypeInteger) Pack() int {
+	return v.size
+}
+
 type VarTypeModuleHandle struct {
 	name string
 }
@@ -131,6 +171,13 @@ func (v *VarTypeModuleHandle) Base() Variable {
 }
 
 func (v *VarTypeModuleHandle) Size() int {
+	if *amd64 {
+		return 8
+	}
+	return 4
+}
+
+func (v *VarTypeModuleHandle) Pack() int {
 	if *amd64 {
 		return 8
 	}
@@ -157,6 +204,13 @@ func (v *VarTypePointer) Size() int {
 	return 4
 }
 
+func (v *VarTypePointer) Pack() int {
+	if *amd64 {
+		return 8
+	}
+	return 4
+}
+
 type VarTypeAlias struct {
 	name    string
 	base    Variable
@@ -175,6 +229,10 @@ func (v *VarTypeAlias) Size() int {
 	return v.base.Size()
 }
 
+func (v *VarTypeAlias) Pack() int {
+	return v.base.Pack()
+}
+
 type VarTypeVoid struct {
 	name string
 }
@@ -188,6 +246,10 @@ func (v *VarTypeVoid) Base() Variable {
 }
 
 func (v *VarTypeVoid) Size() int {
+	return 0
+}
+
+func (v *VarTypeVoid) Pack() int {
 	return 0
 }
 
@@ -207,6 +269,10 @@ func (v *VarTypeCharacter) Size() int {
 	return 1
 }
 
+func (v *VarTypeCharacter) Pack() int {
+	return 1
+}
+
 type VarTypeUnicodeCharacter struct {
 	name string
 }
@@ -220,6 +286,10 @@ func (v *VarTypeUnicodeCharacter) Base() Variable {
 }
 
 func (v *VarTypeUnicodeCharacter) Size() int {
+	return 2
+}
+
+func (v *VarTypeUnicodeCharacter) Pack() int {
 	return 2
 }
 
@@ -239,6 +309,10 @@ func (v *VarTypeTCharacter) Size() int {
 	return 0
 }
 
+func (v *VarTypeTCharacter) Pack() int {
+	return 0
+}
+
 type VarTypeFloating struct {
 	name string
 	size int
@@ -253,6 +327,10 @@ func (v *VarTypeFloating) Base() Variable {
 }
 
 func (v *VarTypeFloating) Size() int {
+	return v.size
+}
+
+func (v *VarTypeFloating) Pack() int {
 	return v.size
 }
 
@@ -274,6 +352,10 @@ func (v *VarTypeArray) Size() int {
 	return v.base.Size() * v.count
 }
 
+func (v *VarTypeArray) Pack() int {
+	return v.base.Pack()
+}
+
 type VarTypeInterface struct {
 	name string
 }
@@ -293,9 +375,64 @@ func (v *VarTypeInterface) Size() int {
 	return 4
 }
 
+func (v *VarTypeInterface) Pack() int {
+	if *amd64 {
+		return 8
+	}
+	return 4
+}
+
+type Field struct {
+	name   string
+	base   Variable
+	offset int
+}
+
+func (f *Field) Offset() int {
+	return f.offset
+}
+
 type VarTypeStruct struct {
 	name   string
-	fields []api.Field
+	fields []Field
+	size   int
+	pack   int
+}
+
+func (v *VarTypeStruct) Init() {
+	var (
+		size   int
+		pack   int
+		offset int
+	)
+
+	if v.pack == 0 {
+		v.pack = 8
+	}
+
+	for i := range v.fields {
+		base := v.fields[i].base
+		if base == nil {
+			continue
+		}
+
+		m := base.Pack()
+		if m > v.pack {
+			m = v.pack
+		}
+		if pack < m {
+			pack = m
+		}
+
+		offset = (offset + m - 1) &^ (m - 1)
+		v.fields[i].offset = offset
+		offset += base.Size()
+	}
+
+	size = (offset + pack - 1) &^ (pack - 1)
+
+	v.size = size
+	v.pack = pack
 }
 
 func (v *VarTypeStruct) Name() string {
@@ -307,13 +444,52 @@ func (v *VarTypeStruct) Base() Variable {
 }
 
 func (v *VarTypeStruct) Size() int {
-	// todo
-	return 0
+	return v.size
+}
+
+func (v *VarTypeStruct) Pack() int {
+	return v.pack
 }
 
 type VarTypeUnion struct {
 	name   string
-	fields []api.Field
+	fields []Field
+	size   int
+	pack   int
+}
+
+func (v *VarTypeUnion) Init() {
+	var (
+		size int
+		pack int
+	)
+
+	if v.pack == 0 {
+		v.pack = 8
+	}
+
+	for i := range v.fields {
+		base := v.fields[i].base
+		if base == nil {
+			continue
+		}
+
+		m := base.Pack()
+		if m > v.pack {
+			m = v.pack
+		}
+		if pack < m {
+			pack = m
+		}
+
+		n := base.Size()
+		if size < n {
+			size = n
+		}
+	}
+
+	v.size = size
+	v.pack = pack
 }
 
 func (v *VarTypeUnion) Name() string {
@@ -325,8 +501,11 @@ func (v *VarTypeUnion) Base() Variable {
 }
 
 func (v *VarTypeUnion) Size() int {
-	// todo
-	return 0
+	return v.size
+}
+
+func (v *VarTypeUnion) Pack() int {
+	return v.pack
 }
 
 type VarTypeGuid struct {
@@ -343,4 +522,8 @@ func (v *VarTypeGuid) Base() Variable {
 
 func (v *VarTypeGuid) Size() int {
 	return 16
+}
+
+func (v *VarTypeGuid) Pack() int {
+	return 4
 }

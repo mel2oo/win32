@@ -12,13 +12,10 @@ import (
 
 var amd64 = flag.Bool("amd64", true, "build api in architeture amd64")
 
-func init() {
-	flag.Parse()
-}
-
 func main() {
-	res := new()
+	flag.Parse()
 
+	res := new()
 	if err := res.parse(); err != nil {
 		panic(err)
 	}
