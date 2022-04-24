@@ -19,7 +19,7 @@ type Variable interface {
 	Pack() int
 }
 
-func GetVariable(v api.Variable) Variable {
+func (r *Result) GetVariable(vs []api.Variable, v api.Variable) Variable {
 	var vb Variable
 
 	switch v.Type {
@@ -37,15 +37,31 @@ func GetVariable(v api.Variable) Variable {
 		}
 
 	case api.TypePointer:
+		base := vbs[v.Base]
+		if base == nil {
+			for _, vv := range vs {
+				if vv.Name == v.Base {
+					base = r.GetVariable(vs, vv)
+				}
+			}
+		}
 		vb = &VarTypePointer{
 			name: v.Name,
-			base: vbs[v.Base],
+			base: base,
 		}
 
 	case api.TypeAlias:
+		base := vbs[v.Base]
+		if base == nil {
+			for _, vv := range vs {
+				if vv.Name == v.Base {
+					base = r.GetVariable(vs, vv)
+				}
+			}
+		}
 		vb = &VarTypeAlias{
 			name:    v.Name,
-			base:    vbs[v.Base],
+			base:    base,
 			display: v.Display.Name,
 		}
 
@@ -76,9 +92,17 @@ func GetVariable(v api.Variable) Variable {
 		}
 
 	case api.TypeArray:
+		base := vbs[v.Base]
+		if base == nil {
+			for _, vv := range vs {
+				if vv.Name == v.Base {
+					base = r.GetVariable(vs, vv)
+				}
+			}
+		}
 		vb = &VarTypeArray{
 			name:  v.Name,
-			base:  vbs[v.Base],
+			base:  base,
 			count: v.Count,
 		}
 
@@ -90,9 +114,18 @@ func GetVariable(v api.Variable) Variable {
 	case api.TypeStruct:
 		fields := make([]Field, 0)
 		for _, f := range v.Field {
+			base := vbs[f.Type]
+			if base == nil {
+				for _, vv := range vs {
+					if vv.Name == f.Type {
+						base = r.GetVariable(vs, vv)
+					}
+				}
+			}
+
 			fields = append(fields, Field{
 				name: f.Name,
-				base: vbs[f.Type],
+				base: base,
 			})
 		}
 
@@ -107,9 +140,17 @@ func GetVariable(v api.Variable) Variable {
 	case api.TypeUnion:
 		fields := make([]Field, 0)
 		for _, f := range v.Field {
+			base := vbs[f.Type]
+			if base == nil {
+				for _, vv := range vs {
+					if vv.Name == f.Type {
+						base = r.GetVariable(vs, vv)
+					}
+				}
+			}
 			fields = append(fields, Field{
 				name: f.Name,
-				base: vbs[f.Type],
+				base: base,
 			})
 		}
 

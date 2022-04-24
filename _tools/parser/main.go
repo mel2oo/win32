@@ -129,13 +129,13 @@ func (r *Result) buildHeader(key string, v *api.HeaderXml) *Header {
 		if (vv.Architecture == api.X64 && *amd64) ||
 			(vv.Architecture == api.X86 && !*amd64) {
 			for _, vvv := range vv.Variable {
-				h.Variables = append(h.Variables, GetVariable(vvv))
+				h.Variables = append(h.Variables, r.GetVariable(v.Headers.Variable, vvv))
 			}
 		}
 	}
 
 	for _, vv := range v.Headers.Variable {
-		GetVariable(vv)
+		r.GetVariable(v.Headers.Variable, vv)
 	}
 
 	return h
