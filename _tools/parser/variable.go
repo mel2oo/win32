@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/mel2oo/win32/_tools/parser/api"
 )
@@ -19,7 +20,7 @@ type Variable interface {
 	Pack() int
 }
 
-func (r *Result) GetVariable(vs []api.Variable, v api.Variable) Variable {
+func SetVariable(vs []api.Variable, v api.Variable) Variable {
 	var vb Variable
 
 	switch v.Type {
@@ -39,9 +40,11 @@ func (r *Result) GetVariable(vs []api.Variable, v api.Variable) Variable {
 	case api.TypePointer:
 		base := vbs[v.Base]
 		if base == nil {
+		loop1:
 			for _, vv := range vs {
 				if vv.Name == v.Base {
-					base = r.GetVariable(vs, vv)
+					base = SetVariable(vs, vv)
+					break loop1
 				}
 			}
 		}
@@ -51,11 +54,24 @@ func (r *Result) GetVariable(vs []api.Variable, v api.Variable) Variable {
 		}
 
 	case api.TypeAlias:
+
 		base := vbs[v.Base]
 		if base == nil {
+		loop2:
 			for _, vv := range vs {
 				if vv.Name == v.Base {
-					base = r.GetVariable(vs, vv)
+					base = SetVariable(vs, vv)
+					break loop2
+				}
+			}
+		}
+		if base == nil && strings.HasSuffix(v.Base, "*") {
+			bname := strings.TrimSuffix(v.Base, "*")
+		loop3:
+			for _, vv := range vs {
+				if vv.Name == bname {
+					base = SetVariable(vs, vv)
+					break loop3
 				}
 			}
 		}
@@ -94,9 +110,11 @@ func (r *Result) GetVariable(vs []api.Variable, v api.Variable) Variable {
 	case api.TypeArray:
 		base := vbs[v.Base]
 		if base == nil {
+		loop4:
 			for _, vv := range vs {
 				if vv.Name == v.Base {
-					base = r.GetVariable(vs, vv)
+					base = SetVariable(vs, vv)
+					break loop4
 				}
 			}
 		}
@@ -107,6 +125,7 @@ func (r *Result) GetVariable(vs []api.Variable, v api.Variable) Variable {
 		}
 
 	case api.TypeInterface:
+
 		vb = &VarTypeInterface{
 			name: v.Name,
 		}
@@ -116,9 +135,11 @@ func (r *Result) GetVariable(vs []api.Variable, v api.Variable) Variable {
 		for _, f := range v.Field {
 			base := vbs[f.Type]
 			if base == nil {
+			loop5:
 				for _, vv := range vs {
 					if vv.Name == f.Type {
-						base = r.GetVariable(vs, vv)
+						base = SetVariable(vs, vv)
+						break loop5
 					}
 				}
 			}
@@ -142,9 +163,11 @@ func (r *Result) GetVariable(vs []api.Variable, v api.Variable) Variable {
 		for _, f := range v.Field {
 			base := vbs[f.Type]
 			if base == nil {
+			loop6:
 				for _, vv := range vs {
 					if vv.Name == f.Type {
-						base = r.GetVariable(vs, vv)
+						base = SetVariable(vs, vv)
+						break loop6
 					}
 				}
 			}
@@ -271,6 +294,9 @@ func (v *VarTypeAlias) Size() int {
 }
 
 func (v *VarTypeAlias) Pack() int {
+	if v.base == nil {
+		return 0
+	}
 	return v.base.Pack()
 }
 

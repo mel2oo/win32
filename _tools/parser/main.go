@@ -22,8 +22,8 @@ func main() {
 }
 
 type Result struct {
-	headers map[string]*api.HeaderXml
-	win32s  map[string]*api.Win32Xml
+	headers map[string]*api.HeadersXml
+	win32s  map[string]*api.ModuleXml
 
 	headerMap map[string]*Header
 	win32Map  map[string]*Win32
@@ -31,8 +31,9 @@ type Result struct {
 
 func new() *Result {
 	return &Result{
-		headers:   make(map[string]*api.HeaderXml),
-		win32s:    make(map[string]*api.Win32Xml),
+		headers: make(map[string]*api.HeadersXml),
+		win32s:  make(map[string]*api.ModuleXml),
+
 		headerMap: make(map[string]*Header),
 		win32Map:  make(map[string]*Win32),
 	}
@@ -40,12 +41,12 @@ func new() *Result {
 
 func (r *Result) parse() (err error) {
 
-	err = filepath.Walk(api.HeaderDir, func(path string, info fs.FileInfo, _ error) error {
+	err = filepath.Walk(api.InternalDir, func(path string, info fs.FileInfo, _ error) error {
 		if info.IsDir() {
 			return nil
 		}
 
-		v := &api.HeaderXml{File: path}
+		v := &api.HeadersXml{File: path}
 
 		data, err := os.ReadFile(path)
 		if err != nil {
@@ -56,7 +57,31 @@ func (r *Result) parse() (err error) {
 			return err
 		}
 
-		r.headers[filepath.Base(v.File)] = v
+		r.headers[v.File] = v
+
+		return nil
+	})
+	if err != nil {
+		return
+	}
+
+	err = filepath.Walk(api.HeaderDir, func(path string, info fs.FileInfo, _ error) error {
+		if info.IsDir() {
+			return nil
+		}
+
+		v := &api.HeadersXml{File: path}
+
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		if err := xml.Unmarshal(data, v); err != nil {
+			return err
+		}
+
+		r.headers[v.File] = v
 
 		return nil
 	})
@@ -69,7 +94,7 @@ func (r *Result) parse() (err error) {
 			return nil
 		}
 
-		v := &api.Win32Xml{File: path}
+		v := &api.ModuleXml{File: path}
 
 		data, err := os.ReadFile(path)
 		if err != nil {
@@ -80,7 +105,7 @@ func (r *Result) parse() (err error) {
 			return err
 		}
 
-		r.win32s[filepath.Base(v.File)] = v
+		r.win32s[v.File] = v
 
 		return nil
 	})
@@ -89,7 +114,11 @@ func (r *Result) parse() (err error) {
 	}
 
 	for _, v := range r.headers {
-		r.headerMap[v.File] = r.buildHeader(v.File, v)
+		r.headerMap[v.File] = r.buildHeader(v)
+	}
+
+	for _, v := range r.win32s {
+		r.win32Map[v.File] = r.buildWin32(v)
 	}
 
 	return
@@ -101,26 +130,20 @@ type Header struct {
 }
 
 type Win32 struct {
-	Includes  []string
+	Includes  map[string]*Header
 	Variables []Variable
-	Apis      []Api
+	Apis      []*Api
 }
 
-type Api struct{}
-
-func (r *Result) buildHeader(key string, v *api.HeaderXml) *Header {
-	if v == nil {
-		return nil
-	}
-
+func (r *Result) buildHeader(v *api.HeadersXml) *Header {
 	h := &Header{
 		Includes:  make(map[string]*Header),
 		Variables: make([]Variable, 0),
 	}
 
 	for _, vv := range v.Include {
-		key := filepath.Base(vv.Filename)
-		header := r.buildHeader(key, r.headers[key])
+		key := filepath.Join("API", vv.Filename)
+		header := r.buildHeader(r.headers[key])
 		h.Includes[key] = header
 		r.headerMap[key] = header
 	}
@@ -129,18 +152,46 @@ func (r *Result) buildHeader(key string, v *api.HeaderXml) *Header {
 		if (vv.Architecture == api.X64 && *amd64) ||
 			(vv.Architecture == api.X86 && !*amd64) {
 			for _, vvv := range vv.Variable {
-				h.Variables = append(h.Variables, r.GetVariable(v.Headers.Variable, vvv))
+				h.Variables = append(h.Variables, SetVariable(v.Headers.Variable, vvv))
 			}
 		}
 	}
 
 	for _, vv := range v.Headers.Variable {
-		r.GetVariable(v.Headers.Variable, vv)
+		h.Variables = append(h.Variables, SetVariable(v.Headers.Variable, vv))
 	}
 
 	return h
 }
 
-func (r *Result) buildWin32() {
+func (r *Result) buildWin32(v *api.ModuleXml) *Win32 {
+	w := &Win32{
+		Includes:  make(map[string]*Header),
+		Variables: make([]Variable, 0),
+		Apis:      make([]*Api, 0),
+	}
 
+	for _, vv := range v.Include {
+		key := filepath.Join("API", vv.Filename)
+		w.Includes[key] = r.headerMap[key]
+	}
+
+	for _, vv := range v.Module.Condition {
+		if (vv.Architecture == api.X64 && *amd64) ||
+			(vv.Architecture == api.X86 && !*amd64) {
+			for _, vvv := range vv.Variable {
+				w.Variables = append(w.Variables, SetVariable(v.Module.Variable, vvv))
+			}
+		}
+	}
+
+	for _, vv := range v.Module.Variable {
+		w.Variables = append(w.Variables, SetVariable(v.Module.Variable, vv))
+	}
+
+	for _, vv := range v.Module.Api {
+		w.Apis = append(w.Apis, GetApi(w.Includes, w.Variables, vv))
+	}
+
+	return w
 }

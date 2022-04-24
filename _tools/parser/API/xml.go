@@ -5,56 +5,44 @@ import (
 )
 
 const (
-	Win32Dir  = "API/Windows"
-	HeaderDir = "API/Headers"
+	InternalDir = "API/Internal"
+	HeaderDir   = "API/Headers"
+	Win32Dir    = "API/Windows"
 )
 
-// Api xml
-type Win32Xml struct {
+// Headers xml
+type HeadersXml struct {
 	File    string
 	Root    xml.Name  `xml:"ApiMonitor"`
+	HelpUrl []HelpUrl `xml:"HelpUrl"`
 	Include []Include `xml:"Include"`
-	Module  Module    `xml:"Module"`
+	Headers Headers   `xml:"Headers"`
+}
+
+type HelpUrl struct {
+	Name string `xml:"Name,attr"`
+	Url  string `xml:"Url,attr"`
 }
 
 type Include struct {
 	Filename string `xml:"Filename,attr"`
 }
 
-type Module struct {
-	Name              string     `xml:"Name,attr"`
-	CallingConvention string     `xml:"CallingConvention,attr"`
-	ErrorFunc         string     `xml:"ErrorFunc,attr"`
-	OnlineHelp        string     `xml:"OnlineHelp,attr"`
-	Category          Category   `xml:"Category"`
-	Api               []Api      `xml:"Api"`
-	Variable          []Variable `xml:"Variable"`
+type Headers struct {
+	Condition []Condition `xml:"Condition"`
+	Variable  []Variable  `xml:"Variable"`
 }
 
-type Category struct {
-	Name string `xml:"Name,attr"`
-}
+type Architecture int
 
-type Api struct {
-	Name        string  `xml:"Name,attr"`
-	BothCharset bool    `xml:"BothCharset,attr"`
-	Param       []Param `xml:"Param"`
-	Return      Return  `xml:"Return"`
-	Success     Success `xml:"Success"`
-}
+const (
+	X64 Architecture = 64
+	X86 Architecture = 86
+)
 
-type Param struct {
-	Type string `xml:"Type,attr"`
-	Name string `xml:"Name,attr"`
-}
-
-type Return struct {
-	Type string `xml:"Type,attr"`
-}
-
-type Success struct {
-	Return string `xml:"Return,attr"`
-	Value  string `xml:"Value,attr"`
+type Condition struct {
+	Architecture Architecture `xml:"Architecture,attr"`
+	Variable     []Variable   `xml:"Variable"`
 }
 
 type Type string
@@ -114,33 +102,78 @@ type Set struct {
 	Value string `xml:"Value,attr"`
 }
 
-// Header xml
-type HeaderXml struct {
+// Interface xml
+type InterfaceXml struct {
 	File    string
 	Root    xml.Name  `xml:"ApiMonitor"`
-	HelpUrl []HelpUrl `xml:"HelpUrl"`
 	Include []Include `xml:"Include"`
-	Headers Headers   `xml:"Headers"`
 }
 
-type HelpUrl struct {
+type Interface struct {
+	Name          string `xml:"Name,attr"`
+	Id            string `xml:"Id,attr"`
+	BaseInterface string `xml:"BaseInterface,attr"`
+	OnlineHelp    string `xml:"OnlineHelp,attr"`
+	ErrorFunc     string `xml:"ErrorFunc,attr"`
+	Category      string `xml:"Category,attr"`
+	Api           []Api  `xml:"Api"`
+}
+
+// ApiSetSchema xml
+type ApiSetSchemaXml struct {
+	Module      string      `xml:"Module,attr"`
+	Redirection Redirection `xml:"Redirection"`
+}
+
+type Redirection struct {
+	Module string `xml:"Module,attr"`
+}
+
+// UnsupportedModules xml
+type UnsupportedModulesXml struct {
+	UnsupportedModules UnsupportedModules `xml:"UnsupportedModules"`
+}
+
+type UnsupportedModules struct {
+	Module Module `xml:"Module"`
+}
+
+// Module xml
+type ModuleXml struct {
+	File    string
+	Root    xml.Name  `xml:"ApiMonitor"`
+	Include []Include `xml:"Include"`
+	Module  Module    `xml:"Module"`
+}
+
+type Module struct {
+	Name              string      `xml:"Name,attr"`
+	CallingConvention string      `xml:"CallingConvention,attr"`
+	ErrorFunc         string      `xml:"ErrorFunc,attr"`
+	OnlineHelp        string      `xml:"OnlineHelp,attr"`
+	Condition         []Condition `xml:"Condition"`
+	Variable          []Variable  `xml:"Variable"`
+	Api               []Api       `xml:"Api"`
+}
+
+type Api struct {
+	Name        string  `xml:"Name,attr"`
+	BothCharset bool    `xml:"BothCharset,attr"`
+	Param       []Param `xml:"Param"`
+	Return      Return  `xml:"Return"`
+	Success     Success `xml:"Success"`
+}
+
+type Param struct {
+	Type string `xml:"Type,attr"`
 	Name string `xml:"Name,attr"`
-	Url  string `xml:"Url,attr"`
 }
 
-type Headers struct {
-	Condition []Condition `xml:"Condition"`
-	Variable  []Variable  `xml:"Variable"`
+type Return struct {
+	Type string `xml:"Type,attr"`
 }
 
-type Architecture int
-
-const (
-	X64 Architecture = 64
-	X86 Architecture = 86
-)
-
-type Condition struct {
-	Architecture Architecture `xml:"Architecture,attr"`
-	Variable     []Variable   `xml:"Variable"`
+type Success struct {
+	Return string `xml:"Return,attr"`
+	Value  string `xml:"Value,attr"`
 }
