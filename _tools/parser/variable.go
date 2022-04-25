@@ -18,6 +18,8 @@ type Variable interface {
 	Base() Variable
 	Size() int
 	Pack() int
+	Set() map[string]string
+	Field() []Field
 }
 
 func SetVariable(vs []api.Variable, v api.Variable) Variable {
@@ -75,11 +77,27 @@ func SetVariable(vs []api.Variable, v api.Variable) Variable {
 				}
 			}
 		}
-		vb = &VarTypeAlias{
+
+		vv := &VarTypeAlias{
 			name:    v.Name,
 			base:    base,
 			display: v.Display.Name,
 		}
+
+		if v.Enum.Set != nil || v.Flag.Set != nil {
+			set := make(map[string]string)
+			for _, s := range v.Enum.Set {
+				set[s.Name] = s.Value
+			}
+
+			for _, s := range v.Flag.Set {
+				set[s.Name] = s.Value
+			}
+
+			vv.set = set
+		}
+
+		vb = vv
 
 	case api.TypeVoid:
 		vb = &VarTypeVoid{
@@ -222,6 +240,14 @@ func (v *VarTypeInteger) Pack() int {
 	return v.size
 }
 
+func (v *VarTypeInteger) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeInteger) Field() []Field {
+	return nil
+}
+
 type VarTypeModuleHandle struct {
 	name string
 }
@@ -246,6 +272,14 @@ func (v *VarTypeModuleHandle) Pack() int {
 		return 8
 	}
 	return 4
+}
+
+func (v *VarTypeModuleHandle) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeModuleHandle) Field() []Field {
+	return nil
 }
 
 type VarTypePointer struct {
@@ -275,10 +309,19 @@ func (v *VarTypePointer) Pack() int {
 	return 4
 }
 
+func (v *VarTypePointer) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypePointer) Field() []Field {
+	return nil
+}
+
 type VarTypeAlias struct {
 	name    string
 	base    Variable
 	display string
+	set     map[string]string
 }
 
 func (v *VarTypeAlias) Name() string {
@@ -294,10 +337,15 @@ func (v *VarTypeAlias) Size() int {
 }
 
 func (v *VarTypeAlias) Pack() int {
-	if v.base == nil {
-		return 0
-	}
 	return v.base.Pack()
+}
+
+func (v *VarTypeAlias) Set() map[string]string {
+	return v.set
+}
+
+func (v *VarTypeAlias) Field() []Field {
+	return nil
 }
 
 type VarTypeVoid struct {
@@ -320,6 +368,14 @@ func (v *VarTypeVoid) Pack() int {
 	return 0
 }
 
+func (v *VarTypeVoid) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeVoid) Field() []Field {
+	return nil
+}
+
 type VarTypeCharacter struct {
 	name string
 }
@@ -338,6 +394,14 @@ func (v *VarTypeCharacter) Size() int {
 
 func (v *VarTypeCharacter) Pack() int {
 	return 1
+}
+
+func (v *VarTypeCharacter) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeCharacter) Field() []Field {
+	return nil
 }
 
 type VarTypeUnicodeCharacter struct {
@@ -360,6 +424,14 @@ func (v *VarTypeUnicodeCharacter) Pack() int {
 	return 2
 }
 
+func (v *VarTypeUnicodeCharacter) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeUnicodeCharacter) Field() []Field {
+	return nil
+}
+
 type VarTypeTCharacter struct {
 	name string
 }
@@ -378,6 +450,14 @@ func (v *VarTypeTCharacter) Size() int {
 
 func (v *VarTypeTCharacter) Pack() int {
 	return 0
+}
+
+func (v *VarTypeTCharacter) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeTCharacter) Field() []Field {
+	return nil
 }
 
 type VarTypeFloating struct {
@@ -401,6 +481,14 @@ func (v *VarTypeFloating) Pack() int {
 	return v.size
 }
 
+func (v *VarTypeFloating) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeFloating) Field() []Field {
+	return nil
+}
+
 type VarTypeArray struct {
 	name  string
 	base  Variable
@@ -421,6 +509,14 @@ func (v *VarTypeArray) Size() int {
 
 func (v *VarTypeArray) Pack() int {
 	return v.base.Pack()
+}
+
+func (v *VarTypeArray) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeArray) Field() []Field {
+	return nil
 }
 
 type VarTypeInterface struct {
@@ -447,6 +543,14 @@ func (v *VarTypeInterface) Pack() int {
 		return 8
 	}
 	return 4
+}
+
+func (v *VarTypeInterface) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeInterface) Field() []Field {
+	return nil
 }
 
 type Field struct {
@@ -518,6 +622,14 @@ func (v *VarTypeStruct) Pack() int {
 	return v.pack
 }
 
+func (v *VarTypeStruct) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeStruct) Field() []Field {
+	return v.fields
+}
+
 type VarTypeUnion struct {
 	name   string
 	fields []Field
@@ -575,6 +687,14 @@ func (v *VarTypeUnion) Pack() int {
 	return v.pack
 }
 
+func (v *VarTypeUnion) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeUnion) Field() []Field {
+	return v.fields
+}
+
 type VarTypeGuid struct {
 	name string
 }
@@ -593,4 +713,22 @@ func (v *VarTypeGuid) Size() int {
 
 func (v *VarTypeGuid) Pack() int {
 	return 4
+}
+
+func (v *VarTypeGuid) Set() map[string]string {
+	return nil
+}
+
+func (v *VarTypeGuid) Field() []Field {
+	return nil
+}
+
+// private
+func GetBase(v Variable) string {
+	for {
+		if v.Base() == nil {
+			return v.Name()
+		}
+		v = v.Base()
+	}
 }
