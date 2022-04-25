@@ -3,14 +3,15 @@ package main
 import (
 	"encoding/xml"
 	"flag"
-	"io/fs"
 	"os"
-	"path/filepath"
 
 	"github.com/mel2oo/win32/_tools/parser/api"
 )
 
-var amd64 = flag.Bool("amd64", true, "build api in architeture amd64")
+var (
+	amd64   = flag.Bool("amd64", false, "build api in architeture amd64")
+	xmlfile = flag.String("xmlfile", "Windows/Advapi32.xml", "parse xml file")
+)
 
 func main() {
 	flag.Parse()
@@ -22,111 +23,37 @@ func main() {
 }
 
 type Result struct {
-	headers map[string]*api.HeadersXml
-	win32s  map[string]*api.ModuleXml
-
 	headerMap map[string]*Header
-	win32Map  map[string]*Win32
+	// interfaceMap map[string]int
+	win32Map map[string]*Win32
 }
 
 func new() *Result {
 	return &Result{
-		headers: make(map[string]*api.HeadersXml),
-		win32s:  make(map[string]*api.ModuleXml),
-
 		headerMap: make(map[string]*Header),
 		win32Map:  make(map[string]*Win32),
 	}
 }
 
-func (r *Result) parse() (err error) {
+func (r *Result) parse() error {
 
-	err = filepath.Walk(api.InternalDir, func(path string, info fs.FileInfo, _ error) error {
-		if info.IsDir() {
-			return nil
-		}
-
-		v := &api.HeadersXml{File: path}
-
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return err
-		}
-
-		if err := xml.Unmarshal(data, v); err != nil {
-			return err
-		}
-
-		r.headers[v.File] = v
-
-		return nil
-	})
+	v, err := r.readModuleXml(*xmlfile)
 	if err != nil {
-		return
+		return err
 	}
 
-	err = filepath.Walk(api.HeaderDir, func(path string, info fs.FileInfo, _ error) error {
-		if info.IsDir() {
-			return nil
-		}
+	r.win32Map[v.File] = r.buildModule(v)
 
-		v := &api.HeadersXml{File: path}
-
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return err
-		}
-
-		if err := xml.Unmarshal(data, v); err != nil {
-			return err
-		}
-
-		r.headers[v.File] = v
-
-		return nil
-	})
-	if err != nil {
-		return
-	}
-
-	err = filepath.Walk(api.Win32Dir, func(path string, info fs.FileInfo, _ error) error {
-		if info.IsDir() {
-			return nil
-		}
-
-		v := &api.ModuleXml{File: path}
-
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return err
-		}
-
-		if err := xml.Unmarshal(data, v); err != nil {
-			return err
-		}
-
-		r.win32s[v.File] = v
-
-		return nil
-	})
-	if err != nil {
-		return
-	}
-
-	for _, v := range r.headers {
-		r.headerMap[v.File] = r.buildHeader(v)
-	}
-
-	for _, v := range r.win32s {
-		r.win32Map[v.File] = r.buildWin32(v)
-	}
-
-	return
+	return nil
 }
 
 type Header struct {
 	Includes  map[string]*Header
 	Variables []Variable
+}
+
+type Interface struct {
+	Includes map[string]*Header
 }
 
 type Win32 struct {
@@ -135,22 +62,44 @@ type Win32 struct {
 	Apis      []*Api
 }
 
-func (r *Result) buildHeader(v *api.HeadersXml) *Header {
+func (r *Result) readHeaderXml(xmlpath string) (*api.HeadersXml, error) {
+	v := &api.HeadersXml{File: xmlpath}
+
+	data, err := os.ReadFile(v.File)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := xml.Unmarshal(data, v); err != nil {
+		return nil, err
+	}
+
+	return v, nil
+}
+
+func (r *Result) buildHeader(xmlpath string) *Header {
 	h := &Header{
 		Includes:  make(map[string]*Header),
 		Variables: make([]Variable, 0),
 	}
 
+	v, err := r.readHeaderXml(xmlpath)
+	if err != nil {
+		return nil
+	}
+
 	for _, vv := range v.Include {
-		key := filepath.Join("API", vv.Filename)
-		header := r.buildHeader(r.headers[key])
-		h.Includes[key] = header
-		r.headerMap[key] = header
+		key := vv.Filename
+		if _, ok := r.headerMap[key]; !ok {
+			h.Includes[key] = r.buildHeader(vv.Filename)
+		} else {
+			h.Includes[key] = r.headerMap[key]
+		}
 	}
 
 	for _, vv := range v.Headers.Condition {
-		if (vv.Architecture == api.X64 && *amd64) ||
-			(vv.Architecture == api.X86 && !*amd64) {
+		if (vv.Architecture == api.W64 && *amd64) ||
+			(vv.Architecture == api.W32 && !*amd64) {
 			for _, vvv := range vv.Variable {
 				h.Variables = append(h.Variables, SetVariable(v.Headers.Variable, vvv))
 			}
@@ -161,10 +110,27 @@ func (r *Result) buildHeader(v *api.HeadersXml) *Header {
 		h.Variables = append(h.Variables, SetVariable(v.Headers.Variable, vv))
 	}
 
+	r.headerMap[xmlpath] = h
+
 	return h
 }
 
-func (r *Result) buildWin32(v *api.ModuleXml) *Win32 {
+func (r *Result) readModuleXml(xmlpath string) (*api.ModuleXml, error) {
+	v := &api.ModuleXml{File: xmlpath}
+
+	data, err := os.ReadFile(v.File)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := xml.Unmarshal(data, v); err != nil {
+		return nil, err
+	}
+
+	return v, nil
+}
+
+func (r *Result) buildModule(v *api.ModuleXml) *Win32 {
 	w := &Win32{
 		Includes:  make(map[string]*Header),
 		Variables: make([]Variable, 0),
@@ -172,13 +138,17 @@ func (r *Result) buildWin32(v *api.ModuleXml) *Win32 {
 	}
 
 	for _, vv := range v.Include {
-		key := filepath.Join("API", vv.Filename)
-		w.Includes[key] = r.headerMap[key]
+		key := vv.Filename
+		if _, ok := r.headerMap[key]; !ok {
+			w.Includes[key] = r.buildHeader(vv.Filename)
+		} else {
+			w.Includes[key] = r.headerMap[key]
+		}
 	}
 
 	for _, vv := range v.Module.Condition {
-		if (vv.Architecture == api.X64 && *amd64) ||
-			(vv.Architecture == api.X86 && !*amd64) {
+		if (vv.Architecture == api.W64 && *amd64) ||
+			(vv.Architecture == api.W32 && !*amd64) {
 			for _, vvv := range vv.Variable {
 				w.Variables = append(w.Variables, SetVariable(v.Module.Variable, vvv))
 			}

@@ -4,12 +4,6 @@ import (
 	"encoding/xml"
 )
 
-const (
-	InternalDir = "API/Internal"
-	HeaderDir   = "API/Headers"
-	Win32Dir    = "API/Windows"
-)
-
 // Headers xml
 type HeadersXml struct {
 	File    string
@@ -36,8 +30,8 @@ type Headers struct {
 type Architecture int
 
 const (
-	X64 Architecture = 64
-	X86 Architecture = 86
+	W64 Architecture = 64
+	W32 Architecture = 32
 )
 
 type Condition struct {
@@ -110,9 +104,10 @@ type Set struct {
 
 // Interface xml
 type InterfaceXml struct {
-	File    string
-	Root    xml.Name  `xml:"ApiMonitor"`
-	Include []Include `xml:"Include"`
+	File      string
+	Root      xml.Name  `xml:"ApiMonitor"`
+	Include   []Include `xml:"Include"`
+	Interface Interface `xml:"Interface"`
 }
 
 type Interface struct {
@@ -171,8 +166,9 @@ type Api struct {
 }
 
 type Param struct {
-	Type string `xml:"Type,attr"`
-	Name string `xml:"Name,attr"`
+	Type        string `xml:"Type,attr"`
+	Name        string `xml:"Name,attr"`
+	InterfaceId string `xml:"InterfaceId,attr"`
 }
 
 type Return struct {
