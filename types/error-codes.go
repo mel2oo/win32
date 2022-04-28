@@ -1,8 +1,9 @@
 package types
 
 type (
-	ERROR_CODE DWORD
-	LSTATUS    ERROR_CODE
+	ERROR_CODE       DWORD
+	ERROR_CODE_ULONG ERROR_CODE
+	LSTATUS          ERROR_CODE
 )
 
 const (

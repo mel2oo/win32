@@ -17,7 +17,7 @@ import (
 func AbortSystemShutdown(lpMachineName string) types.BOOL {
 	a1, err := syscall.UTF16PtrFromString(lpMachineName)
 	if err != nil {
-		return types.FALSE
+		return types.BOOL(0)
 	}
 
 	ret, _, _ := advapi32.ProcAbortSystemShutdown.Call(uintptr(unsafe.Pointer(a1)))
@@ -53,12 +53,12 @@ func InitiateSystemShutdown(lpMachineName, lpMessage string, dwTimeout types.DWO
 	bForceAppsClosed, bRebootAfterShutdown types.BOOL) types.BOOL {
 	a1, err := syscall.UTF16PtrFromString(lpMachineName)
 	if err != nil {
-		return types.FALSE
+		return types.BOOL(0)
 	}
 
 	a2, err := syscall.UTF16PtrFromString(lpMessage)
 	if err != nil {
-		return types.FALSE
+		return types.BOOL(0)
 	}
 
 	ret, _, _ := advapi32.ProcInitiateSystemShutdown.Call(
@@ -77,12 +77,12 @@ func InitiateSystemShutdownEx(lpMachineName, lpMessage string, dwTimeout types.D
 	bForceAppsClosed, bRebootAfterShutdown types.BOOL, dwReason types.DWORD) types.BOOL {
 	a1, err := syscall.UTF16PtrFromString(lpMachineName)
 	if err != nil {
-		return types.FALSE
+		return types.BOOL(0)
 	}
 
 	a2, err := syscall.UTF16PtrFromString(lpMessage)
 	if err != nil {
-		return types.FALSE
+		return types.BOOL(0)
 	}
 
 	ret, _, _ := advapi32.ProcInitiateSystemShutdownEx.Call(

@@ -1,3 +1,7 @@
+// From MSDN: Windows Data Types
+// http://msdn.microsoft.com/en-us/library/s3f49ktz.aspx
+// http://msdn.microsoft.com/en-us/library/windows/desktop/aa383751.aspx
+
 package types
 
 import (
@@ -17,8 +21,12 @@ type (
 	LPCVOID LPVOID
 	PVOID   LPVOID
 
+	// PVOID64
+	PVOID64 UINT64
+
 	// byte
-	BYTE byte
+	BYTE   byte
+	LPBYTE *BYTE
 
 	// 8-bit unsigned integer
 	UCHAR  uint8
@@ -126,7 +134,7 @@ type (
 	PSIZE_T *SIZE_T
 
 	// time_t
-	time_t INT64
+	TIME_T INT64
 
 	// float
 	FLOAT   float32
@@ -137,5 +145,5 @@ type (
 	DOUBLE float64
 
 	// va_list
-	va_list LPVOID
+	VA_LIST LPVOID
 )

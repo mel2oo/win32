@@ -4,23 +4,6 @@ package types
 // http://msdn.microsoft.com/en-us/library/s3f49ktz.aspx
 // http://msdn.microsoft.com/en-us/library/windows/desktop/aa383751.aspx
 
-const (
-	TRUE  = BOOL(1)
-	FALSE = BOOL(0)
-)
-
-type (
-	LARGE_INTEGER uint64
-	HANDLE        PVOID
-
-	GUID struct {
-		Data1 uint32
-		Data2 uint16
-		Data3 uint16
-		Data4 [8]byte
-	}
-)
-
 // ATOM                  WORD
 // BOOL                  int32
 // BOOLEAN               byte
