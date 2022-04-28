@@ -1,9 +1,9 @@
 package winreg
 
-import "github.com/mel2oo/win32/typedef"
+import "github.com/mel2oo/win32/types"
 
 type (
-	HKEY  typedef.HANDLE
+	HKEY  types.HANDLE
 	PHKEY *HKEY
 )
 
@@ -21,7 +21,7 @@ const (
 	HKEY_CURRENT_USER_LOCAL_SETTINGS = -2147483641
 )
 
-type REGSAM typedef.DWORD
+type REGSAM types.DWORD
 
 const (
 	REGSAM_DELETE                 REGSAM = 0x00010000

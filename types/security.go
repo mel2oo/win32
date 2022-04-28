@@ -1,4 +1,4 @@
-package typedef
+package types
 
 type SECURITY_DESCRIPTOR_CONTROL WORD
 

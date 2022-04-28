@@ -1,10 +1,10 @@
 package winsvc
 
-import "github.com/mel2oo/win32/typedef"
+import "github.com/mel2oo/win32/types"
 
-type SC_HANDLE typedef.HANDLE
+type SC_HANDLE types.HANDLE
 
-type SCManagerAccess typedef.DWORD
+type SCManagerAccess types.DWORD
 
 const (
 	GENERIC_READ                  SCManagerAccess = 0x80000000
@@ -19,7 +19,7 @@ const (
 	SC_MANAGER_ALL_ACCESS         SCManagerAccess = 0xF003F
 )
 
-type ServiceAccess typedef.DWORD
+type ServiceAccess types.DWORD
 
 const (
 	SERVICE_QUERY_CONFIG                      ServiceAccess = 0x0001
@@ -43,13 +43,13 @@ const (
 	MAXIMUM_ALLOWED                           ServiceAccess = 0x02000000
 )
 
-type SC_STATUS_TYPE typedef.UINT
+type SC_STATUS_TYPE types.UINT
 
 const (
 	SC_STATUS_PROCESS_INFO SC_STATUS_TYPE = iota
 )
 
-type ServiceType typedef.DWORD
+type ServiceType types.DWORD
 
 const (
 	SERVICE_KERNEL_DRIVER       ServiceType = 0x00000001
@@ -64,7 +64,7 @@ const (
 	SERVICE_NO_CHANGE           ServiceType = 0xffffffff
 )
 
-type ServiceCurrentState typedef.DWORD
+type ServiceCurrentState types.DWORD
 
 const (
 	SERVICE_STOPPED          ServiceCurrentState = 0x00000001
@@ -76,7 +76,7 @@ const (
 	SERVICE_PAUSED           ServiceCurrentState = 0x00000007
 )
 
-type ServiceAcceptControls typedef.DWORD
+type ServiceAcceptControls types.DWORD
 
 const (
 	SERVICE_ACCEPT_STOP                  ServiceAcceptControls = 0x00000001
@@ -92,7 +92,7 @@ const (
 	SERVICE_ACCEPT_TRIGGEREVENT          ServiceAcceptControls = 0x00000400
 )
 
-type ServiceFlags typedef.DWORD
+type ServiceFlags types.DWORD
 
 const (
 	SERVICE_RUNS_IN_SYSTEM_PROCESS ServiceFlags = 0x00000001
@@ -112,10 +112,10 @@ type SERVICE_STATUS_PROCESS struct {
 	DwServiceType             ServiceType
 	DwCurrentState            ServiceCurrentState
 	DwControlsAccepted        ServiceAcceptControls
-	DwWin32ExitCode           typedef.DWORD
-	DwServiceSpecificExitCode typedef.DWORD
-	DwCheckPoint              typedef.DWORD
-	DwWaitHint                typedef.DWORD
-	DwProcessId               typedef.DWORD
+	DwWin32ExitCode           types.DWORD
+	DwServiceSpecificExitCode types.DWORD
+	DwCheckPoint              types.DWORD
+	DwWaitHint                types.DWORD
+	DwProcessId               types.DWORD
 	DwServiceFlags            ServiceFlags
 }

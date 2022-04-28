@@ -1,11 +1,15 @@
 package evntrace
 
-import "github.com/mel2oo/win32/typedef"
+import (
+	"syscall"
+
+	"github.com/mel2oo/win32/types"
+)
 
 type (
-	TRACEHANDLE        typedef.ULONG64
+	TRACEHANDLE        types.ULONG64
 	PTRACEHANDLE       *TRACEHANDLE
-	WNODE_HEADER_Flags typedef.ULONG
+	WNODE_HEADER_Flags types.ULONG
 )
 
 const (
@@ -34,16 +38,16 @@ const (
 )
 
 type WNODE_HEADER struct {
-	BufferSize    typedef.ULONG
-	ProviderId    typedef.ULONG
-	U1            typedef.ULONG64
-	U2            typedef.HANDLE
-	Guid          typedef.GUID
-	ClientContext typedef.ULONG
+	BufferSize    types.ULONG
+	ProviderId    types.ULONG
+	U1            types.ULONG64
+	U2            types.HANDLE
+	Guid          types.GUID
+	ClientContext types.ULONG
 	Flags         WNODE_HEADER_Flags
 }
 
-type EventLogFileMode typedef.ULONG
+type EventLogFileMode types.ULONG
 
 const (
 	EVENT_TRACE_FILE_MODE_NONE             EventLogFileMode = 0x00000000
@@ -69,7 +73,7 @@ const (
 	EVENT_TRACE_NO_PER_PROCESSOR_BUFFERING EventLogFileMode = 0x10000000
 )
 
-type EventEnableFlags typedef.ULONG
+type EventEnableFlags types.ULONG
 
 const (
 	EVENT_TRACE_FLAG_PROCESS            EventEnableFlags = 0x00000001
@@ -103,22 +107,87 @@ const (
 
 type EVENT_TRACE_PROPERTIES struct {
 	Wnode               WNODE_HEADER
-	BufferSize          typedef.ULONG
-	MinimumBuffers      typedef.ULONG
-	MaximumBuffers      typedef.ULONG
-	MaximumFileSize     typedef.ULONG
+	BufferSize          types.ULONG
+	MinimumBuffers      types.ULONG
+	MaximumBuffers      types.ULONG
+	MaximumFileSize     types.ULONG
 	LogFileMode         EventLogFileMode
-	FlushTimer          typedef.ULONG
+	FlushTimer          types.ULONG
 	EnableFlags         EventEnableFlags
-	AgeLimit            typedef.LONG
-	NumberOfBuffers     typedef.ULONG
-	FreeBuffers         typedef.ULONG
-	EventsLost          typedef.ULONG
-	BuffersWritten      typedef.ULONG
-	LogBuffersLost      typedef.ULONG
-	RealTimeBuffersLost typedef.ULONG
-	LoggerThreadId      typedef.HANDLE
-	LogFileNameOffset   typedef.ULONG
-	LoggerNameOffset    typedef.ULONG
+	AgeLimit            types.LONG
+	NumberOfBuffers     types.ULONG
+	FreeBuffers         types.ULONG
+	EventsLost          types.ULONG
+	BuffersWritten      types.ULONG
+	LogBuffersLost      types.ULONG
+	RealTimeBuffersLost types.ULONG
+	LoggerThreadId      types.HANDLE
+	LogFileNameOffset   types.ULONG
+	LoggerNameOffset    types.ULONG
 }
 type PEVENT_TRACE_PROPERTIES *EVENT_TRACE_PROPERTIES
+
+type EVENT_TRACE_HEADER struct {
+	Size           types.USHORT
+	FieldTypeFlags [2]byte
+	Version        [4]byte
+	ThreadId       types.ULONG
+	ProcessId      types.ULONG
+	TimeStamp      types.LARGE_INTEGER
+	GUID           [16]byte
+	ProcessorTime  [8]byte
+}
+
+// <Variable PEVENT_TRACE_HEADER" Type="Pointer" Base="EVENT_TRACE_HEADER
+
+type EVENT_TRACE struct {
+	Header           EVENT_TRACE_HEADER
+	InstanceId       types.ULONG
+	ParentInstanceId types.ULONG
+	ParentGuid       types.GUID
+	MofData          types.PVOID
+	MofLength        types.ULONG
+	Context          types.ULONG
+}
+
+type TRACE_LOGFILE_HEADER struct {
+	BufferSize         types.ULONG
+	Version            [4]byte
+	ProviderVersion    types.ULONG
+	NumberOfProcessors types.ULONG
+	EndTime            types.LARGE_INTEGER
+	TimerResolution    types.ULONG
+	MaximumFileSize    types.ULONG
+	LogFileMode        EventLogFileMode
+	BuffersWritten     types.ULONG
+	GUID               [16]byte
+	LoggerName         string
+	LogFileName        string
+	TimeZone           syscall.Timezoneinformation
+	BootTime           types.LARGE_INTEGER
+	PerfFreq           types.LARGE_INTEGER
+	StartTime          types.LARGE_INTEGER
+	ReservedFlags      types.ULONG
+	BuffersLost        types.ULONG
+}
+
+type PEVENT_TRACE_BUFFER_CALLBACK types.LPVOID
+
+type EVENT_TRACE_LOGFILE struct {
+	LogFileName    string
+	LoggerName     string
+	CurrentTime    types.LONGLONG
+	BuffersRead    types.ULONG
+	LogFileMode    types.ULONG
+	CurrentEvent   EVENT_TRACE
+	LogfileHeader  TRACE_LOGFILE_HEADER
+	BufferCallback PEVENT_TRACE_BUFFER_CALLBACK
+	BufferSize     types.ULONG
+	Filled         types.ULONG
+	EventsLost     types.ULONG
+	EventCallback  [8]byte
+	IsKernelTrace  types.ULONG
+	Context        types.PVOID
+}
+
+type PEVENT_TRACE_LOGFILE *EVENT_TRACE_LOGFILE

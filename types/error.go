@@ -1,4 +1,4 @@
-package typedef
+package types
 
 type (
 	ERROR_CODE DWORD

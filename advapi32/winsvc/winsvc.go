@@ -10,13 +10,13 @@ import (
 	"unsafe"
 
 	"github.com/mel2oo/win32/advapi32"
-	"github.com/mel2oo/win32/typedef"
+	"github.com/mel2oo/win32/types"
 )
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-closeservicehandle
-func CloseServiceHandle(hSCObject SC_HANDLE) typedef.BOOL {
+func CloseServiceHandle(hSCObject SC_HANDLE) types.BOOL {
 	ret, _, _ := advapi32.ProcCloseServiceHandle.Call(uintptr(hSCObject))
-	return typedef.BOOL(ret)
+	return types.BOOL(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
@@ -65,18 +65,18 @@ func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess Ser
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatus
-func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) typedef.BOOL {
+func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) types.BOOL {
 	ret, _, _ := advapi32.ProcQueryServiceStatus.Call(
 		uintptr(hService),
 		uintptr(unsafe.Pointer(lpServiceStatus)),
 	)
 
-	return typedef.BOOL(ret)
+	return types.BOOL(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex
 func QueryServiceStatusEx(hService SC_HANDLE, InfoLevel SC_STATUS_TYPE, lpBuffer *SERVICE_STATUS_PROCESS,
-	cbBufSize typedef.DWORD, pcbBytesNeeded *typedef.DWORD) typedef.BOOL {
+	cbBufSize types.DWORD, pcbBytesNeeded *types.DWORD) types.BOOL {
 	ret, _, _ := advapi32.ProcQueryServiceStatusEx.Call(
 		uintptr(hService),
 		uintptr(InfoLevel),
@@ -85,5 +85,5 @@ func QueryServiceStatusEx(hService SC_HANDLE, InfoLevel SC_STATUS_TYPE, lpBuffer
 		uintptr(unsafe.Pointer(pcbBytesNeeded)),
 	)
 
-	return typedef.BOOL(ret)
+	return types.BOOL(ret)
 }

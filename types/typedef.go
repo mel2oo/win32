@@ -1,4 +1,4 @@
-package typedef
+package types
 
 // From MSDN: Windows Data Types
 // http://msdn.microsoft.com/en-us/library/s3f49ktz.aspx
@@ -10,17 +10,8 @@ const (
 )
 
 type (
-	BOOL    int32
-	BYTE    byte
-	UINT    uint32
-	WORD    uint16
-	DWORD   uint32
-	LPDWORD *DWORD
-	LONG    int32
-	ULONG   uint32
-	ULONG64 uint64
-	PVOID   uintptr
-	HANDLE  PVOID
+	LARGE_INTEGER uint64
+	HANDLE        PVOID
 
 	GUID struct {
 		Data1 uint32

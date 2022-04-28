@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/mel2oo/win32/_tools/parser/api"
@@ -23,7 +24,9 @@ func main() {
 		panic(err)
 	}
 
-	res.generate()
+	path := "bin"
+	os.MkdirAll(path, os.ModeDir)
+	res.generate(path)
 }
 
 type Result struct {
@@ -170,7 +173,7 @@ func (r *Result) buildModule(v *api.ModuleXml) *Module {
 	return w
 }
 
-func (r *Result) generate() error {
+func (r *Result) generate(path string) error {
 	for n, h := range r.headerMap {
 		var (
 			fdt = "package api\n\n"
@@ -180,12 +183,12 @@ func (r *Result) generate() error {
 		)
 
 		for _, v := range h.Variables {
-			fdt += fmt.Sprintf("var %s %s\n\n", v.Name(), GetBase(v))
+			fdt += fmt.Sprintf("type %s %s\n\n", v.Name(), GetBase(v))
 
 			if v.Set() != nil {
 				var cst string
-				for def, val := range v.Set() {
-					cst += fmt.Sprintf("%s %s %s\n", def, v.Name(), val)
+				for _, val := range v.Set() {
+					cst += fmt.Sprintf("%s %s = %s\n", val.key, v.Name(), val.value)
 				}
 				fdt += fmt.Sprintf("const (\n%s)\n\n", cst)
 			}
@@ -193,13 +196,18 @@ func (r *Result) generate() error {
 			if v.Field() != nil {
 				var cst string
 				for _, field := range v.Field() {
-					cst += fmt.Sprintf("%s %s\n", field.name, field.base.Name())
+					if field.base == nil {
+						cst += fmt.Sprintf("%s Interface\n", field.name)
+					} else {
+						cst += fmt.Sprintf("%s %s\n", field.name, field.base.Name())
+					}
 				}
 				fdt += fmt.Sprintf("type %s struct{\n%s}\n\n", v.Name(), cst)
 			}
 		}
 
-		fs, err := os.Create(mdn)
+		os.MkdirAll(filepath.Join(path, "types"), os.ModeDir)
+		fs, err := os.Create(filepath.Join(path, "types", mdn))
 		if err != nil {
 			return err
 		}
@@ -212,7 +220,48 @@ func (r *Result) generate() error {
 	}
 
 	for n, m := range r.moduleMap {
-		fmt.Println(n, m)
+		var (
+			fdt = "package api\n\n"
+			sp1 = strings.Split(n, "/")
+			sp2 = strings.Split(sp1[len(sp1)-1], ".")
+			mdn = sp2[0] + ".go"
+		)
+
+		for _, v := range m.Variables {
+			fdt += fmt.Sprintf("type %s %s\n\n", v.Name(), GetBase(v))
+
+			if v.Set() != nil {
+				var cst string
+				for _, val := range v.Set() {
+					cst += fmt.Sprintf("%s %s = %s\n", val.key, v.Name(), val.value)
+				}
+				fdt += fmt.Sprintf("const (\n%s)\n\n", cst)
+			}
+
+			if v.Field() != nil {
+				var cst string
+				for _, field := range v.Field() {
+					if field.base == nil {
+						cst += fmt.Sprintf("%s Interface\n", field.name)
+					} else {
+						cst += fmt.Sprintf("%s %s\n", field.name, field.base.Name())
+					}
+				}
+				fdt += fmt.Sprintf("type %s struct{\n%s}\n\n", v.Name(), cst)
+			}
+		}
+
+		os.MkdirAll(filepath.Join(path, "module"), os.ModeDir)
+		fs, err := os.Create(filepath.Join(path, "module", mdn))
+		if err != nil {
+			return err
+		}
+
+		if _, err = fs.Write([]byte(fdt)); err != nil {
+			return err
+		}
+
+		fs.Close()
 	}
 
 	return nil

@@ -18,7 +18,7 @@ type Variable interface {
 	Base() Variable
 	Size() int
 	Pack() int
-	Set() map[string]string
+	Set() []Set
 	Field() []Field
 }
 
@@ -27,12 +27,36 @@ func SetVariable(vs []api.Variable, v api.Variable) Variable {
 
 	switch v.Type {
 	case api.TypeInteger:
-		vb = &VarTypeInteger{
+		vv := &VarTypeInteger{
 			name:       v.Name,
 			size:       v.Size,
 			unsigned:   v.Unsigned,
 			displayhex: v.DisplayHex,
 		}
+
+		if v.Enum.Set != nil {
+			set := make([]Set, 0)
+			for _, s := range v.Enum.Set {
+				set = append(set, Set{
+					key:   s.Name,
+					value: s.Value,
+				})
+			}
+			vv.set = set
+
+		} else if v.Flag.Set != nil {
+			set := make([]Set, 0)
+
+			for _, s := range v.Flag.Set {
+				set = append(set, Set{
+					key:   s.Name,
+					value: s.Value,
+				})
+			}
+			vv.set = set
+		}
+
+		vb = vv
 
 	case api.TypeModuleHandle:
 		vb = &VarTypeModuleHandle{
@@ -84,16 +108,24 @@ func SetVariable(vs []api.Variable, v api.Variable) Variable {
 			display: v.Display.Name,
 		}
 
-		if v.Enum.Set != nil || v.Flag.Set != nil {
-			set := make(map[string]string)
+		if v.Enum.Set != nil {
+			set := make([]Set, 0)
 			for _, s := range v.Enum.Set {
-				set[s.Name] = s.Value
+				set = append(set, Set{
+					key:   s.Name,
+					value: s.Value,
+				})
 			}
+			vv.set = set
 
+		} else if v.Flag.Set != nil {
+			set := make([]Set, 0)
 			for _, s := range v.Flag.Set {
-				set[s.Name] = s.Value
+				set = append(set, Set{
+					key:   s.Name,
+					value: s.Value,
+				})
 			}
-
 			vv.set = set
 		}
 
@@ -222,6 +254,7 @@ type VarTypeInteger struct {
 	size       int
 	unsigned   bool
 	displayhex bool
+	set        []Set
 }
 
 func (v *VarTypeInteger) Name() string {
@@ -240,8 +273,13 @@ func (v *VarTypeInteger) Pack() int {
 	return v.size
 }
 
-func (v *VarTypeInteger) Set() map[string]string {
-	return nil
+type Set struct {
+	key   string
+	value string
+}
+
+func (v *VarTypeInteger) Set() []Set {
+	return v.set
 }
 
 func (v *VarTypeInteger) Field() []Field {
@@ -274,7 +312,7 @@ func (v *VarTypeModuleHandle) Pack() int {
 	return 4
 }
 
-func (v *VarTypeModuleHandle) Set() map[string]string {
+func (v *VarTypeModuleHandle) Set() []Set {
 	return nil
 }
 
@@ -309,7 +347,7 @@ func (v *VarTypePointer) Pack() int {
 	return 4
 }
 
-func (v *VarTypePointer) Set() map[string]string {
+func (v *VarTypePointer) Set() []Set {
 	return nil
 }
 
@@ -321,7 +359,7 @@ type VarTypeAlias struct {
 	name    string
 	base    Variable
 	display string
-	set     map[string]string
+	set     []Set
 }
 
 func (v *VarTypeAlias) Name() string {
@@ -340,7 +378,7 @@ func (v *VarTypeAlias) Pack() int {
 	return v.base.Pack()
 }
 
-func (v *VarTypeAlias) Set() map[string]string {
+func (v *VarTypeAlias) Set() []Set {
 	return v.set
 }
 
@@ -368,7 +406,7 @@ func (v *VarTypeVoid) Pack() int {
 	return 0
 }
 
-func (v *VarTypeVoid) Set() map[string]string {
+func (v *VarTypeVoid) Set() []Set {
 	return nil
 }
 
@@ -396,7 +434,7 @@ func (v *VarTypeCharacter) Pack() int {
 	return 1
 }
 
-func (v *VarTypeCharacter) Set() map[string]string {
+func (v *VarTypeCharacter) Set() []Set {
 	return nil
 }
 
@@ -424,7 +462,7 @@ func (v *VarTypeUnicodeCharacter) Pack() int {
 	return 2
 }
 
-func (v *VarTypeUnicodeCharacter) Set() map[string]string {
+func (v *VarTypeUnicodeCharacter) Set() []Set {
 	return nil
 }
 
@@ -452,7 +490,7 @@ func (v *VarTypeTCharacter) Pack() int {
 	return 0
 }
 
-func (v *VarTypeTCharacter) Set() map[string]string {
+func (v *VarTypeTCharacter) Set() []Set {
 	return nil
 }
 
@@ -481,7 +519,7 @@ func (v *VarTypeFloating) Pack() int {
 	return v.size
 }
 
-func (v *VarTypeFloating) Set() map[string]string {
+func (v *VarTypeFloating) Set() []Set {
 	return nil
 }
 
@@ -511,7 +549,7 @@ func (v *VarTypeArray) Pack() int {
 	return v.base.Pack()
 }
 
-func (v *VarTypeArray) Set() map[string]string {
+func (v *VarTypeArray) Set() []Set {
 	return nil
 }
 
@@ -545,7 +583,7 @@ func (v *VarTypeInterface) Pack() int {
 	return 4
 }
 
-func (v *VarTypeInterface) Set() map[string]string {
+func (v *VarTypeInterface) Set() []Set {
 	return nil
 }
 
@@ -622,7 +660,7 @@ func (v *VarTypeStruct) Pack() int {
 	return v.pack
 }
 
-func (v *VarTypeStruct) Set() map[string]string {
+func (v *VarTypeStruct) Set() []Set {
 	return nil
 }
 
@@ -687,7 +725,7 @@ func (v *VarTypeUnion) Pack() int {
 	return v.pack
 }
 
-func (v *VarTypeUnion) Set() map[string]string {
+func (v *VarTypeUnion) Set() []Set {
 	return nil
 }
 
@@ -715,7 +753,7 @@ func (v *VarTypeGuid) Pack() int {
 	return 4
 }
 
-func (v *VarTypeGuid) Set() map[string]string {
+func (v *VarTypeGuid) Set() []Set {
 	return nil
 }
 

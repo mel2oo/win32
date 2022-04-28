@@ -16,3 +16,5 @@
 
 # Mac store file
 *.DS_Store
+
+bin/
