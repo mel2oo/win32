@@ -27,6 +27,7 @@ type (
 	// byte
 	BYTE   byte
 	LPBYTE *BYTE
+	PBYTE  *BYTE
 
 	// 8-bit unsigned integer
 	UCHAR  uint8
