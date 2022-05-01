@@ -4,32 +4,32 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/mel2oo/win32/advapi32"
-	"github.com/mel2oo/win32/typedef"
+	"github.com/mel2oo/win32/advapi32/winsvc"
+	"github.com/mel2oo/win32/types"
 )
 
 func main() {
-	scmhandler := advapi32.OpenSCManager("", "", advapi32.SC_MANAGER_ALL_ACCESS)
+	scmhandler := winsvc.OpenSCManager("", "", winsvc.SC_MANAGER_ALL_ACCESS)
 	if scmhandler == 0 {
 		return
 	}
-	defer advapi32.CloseServiceHandle(scmhandler)
+	defer winsvc.CloseServiceHandle(scmhandler)
 
-	srvhandler := advapi32.OpenService(scmhandler, "Appinfo", advapi32.SERVICE_ALL_ACCESS)
+	srvhandler := winsvc.OpenService(scmhandler, "Appinfo", winsvc.SERVICE_ALL_ACCESS)
 	if srvhandler == 0 {
 		return
 	}
-	defer advapi32.CloseServiceHandle(srvhandler)
+	defer winsvc.CloseServiceHandle(srvhandler)
 
-	var ssStatus advapi32.SERVICE_STATUS_PROCESS
-	var dwBytesNeeded typedef.DWORD
+	var ssStatus winsvc.SERVICE_STATUS_PROCESS
+	var dwBytesNeeded types.DWORD
 
-	if advapi32.QueryServiceStatusEx(
+	if winsvc.QueryServiceStatusEx(
 		srvhandler,
-		advapi32.SC_STATUS_PROCESS_INFO,
+		winsvc.SC_STATUS_PROCESS_INFO,
 		&ssStatus,
-		typedef.DWORD(unsafe.Sizeof(ssStatus)),
-		&dwBytesNeeded) == typedef.FALSE {
+		types.DWORD(unsafe.Sizeof(ssStatus)),
+		&dwBytesNeeded) == 0 {
 		return
 	}
 
