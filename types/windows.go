@@ -1,6 +1,6 @@
 package types
 
-import "golang.org/x/sys/windows"
+import "syscall"
 
 type (
 	HINSTANCE                   HMODULE
@@ -504,7 +504,7 @@ type (
 
 type (
 	// GUID
-	GUID    windows.GUID
+	GUID    syscall.GUID
 	PGUID   *GUID
 	LPCGUID *GUID
 	LPGUID  *GUID
