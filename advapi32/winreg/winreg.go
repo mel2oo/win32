@@ -98,13 +98,13 @@ func InitiateSystemShutdownEx(lpMachineName, lpMessage string, dwTimeout types.D
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey
-func RegCloseKey(hKey HKEY) types.LSTATUS {
+func RegCloseKey(hKey types.HKEY) types.LSTATUS {
 	ret, _, _ := advapi32.ProcRegCloseKey.Call(uintptr(hKey))
 	return types.LSTATUS(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regconnectregistryw
-func RegConnectRegistry(lpMachineName string, hKey HKEY, phkResult *HKEY) types.LSTATUS {
+func RegConnectRegistry(lpMachineName string, hKey types.HKEY, phkResult *types.HKEY) types.LSTATUS {
 	a1, err := syscall.UTF16PtrFromString(lpMachineName)
 	if err != nil {
 		return types.LSTATUS(types.ERROR_INVALID_PARAMETER)
@@ -120,7 +120,7 @@ func RegConnectRegistry(lpMachineName string, hKey HKEY, phkResult *HKEY) types.
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcopytreew
-func RegCopyTree(hKeySrc HKEY, lpSubKey string, hKeyDest HKEY) types.LSTATUS {
+func RegCopyTree(hKeySrc types.HKEY, lpSubKey string, hKeyDest types.HKEY) types.LSTATUS {
 	a1, err := syscall.UTF16PtrFromString(lpSubKey)
 	if err != nil {
 		return types.LSTATUS(types.ERROR_INVALID_PARAMETER)
@@ -137,11 +137,11 @@ func RegCopyTree(hKeySrc HKEY, lpSubKey string, hKeyDest HKEY) types.LSTATUS {
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcreatekeyexw
 func RegCreateKeyEx(
-	hKey HKEY, lpSubKey string,
+	hKey types.HKEY, lpSubKey string,
 	Reserved types.DWORD, lpClass string,
-	dwOptions types.DWORD, samDesired REGSAM,
+	dwOptions types.DWORD, samDesired types.REGSAM,
 	lpSecurityAttributes types.LPSECURITY_ATTRIBUTES,
-	phkResult PHKEY, lpdwDisposition types.LPDWORD) types.LSTATUS {
+	phkResult types.PHKEY, lpdwDisposition types.LPDWORD) types.LSTATUS {
 	a1, err := syscall.UTF16PtrFromString(lpSubKey)
 	if err != nil {
 		return types.LSTATUS(types.ERROR_INVALID_PARAMETER)

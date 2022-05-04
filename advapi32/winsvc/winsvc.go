@@ -14,13 +14,13 @@ import (
 )
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-closeservicehandle
-func CloseServiceHandle(hSCObject SC_HANDLE) types.BOOL {
+func CloseServiceHandle(hSCObject types.SC_HANDLE) types.BOOL {
 	ret, _, _ := advapi32.ProcCloseServiceHandle.Call(uintptr(hSCObject))
 	return types.BOOL(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
-func OpenSCManager(lpMachineName, lpDatabaseName string, dwDesiredAccess SCManagerAccess) SC_HANDLE {
+func OpenSCManager(lpMachineName, lpDatabaseName string, dwDesiredAccess types.SCManagerAccess) types.SC_HANDLE {
 	var p1, p2 uintptr
 
 	if len(lpMachineName) > 0 {
@@ -45,11 +45,11 @@ func OpenSCManager(lpMachineName, lpDatabaseName string, dwDesiredAccess SCManag
 		uintptr(dwDesiredAccess),
 	)
 
-	return SC_HANDLE(ret)
+	return types.SC_HANDLE(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
-func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess ServiceAccess) SC_HANDLE {
+func OpenService(hSCManager types.SC_HANDLE, lpServiceName string, dwDesiredAccess types.ServiceAccess) types.SC_HANDLE {
 	a1, err := syscall.UTF16PtrFromString(lpServiceName)
 	if err != nil {
 		return 0
@@ -61,11 +61,11 @@ func OpenService(hSCManager SC_HANDLE, lpServiceName string, dwDesiredAccess Ser
 		uintptr(dwDesiredAccess),
 	)
 
-	return SC_HANDLE(ret)
+	return types.SC_HANDLE(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatus
-func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) types.BOOL {
+func QueryServiceStatus(hService types.SC_HANDLE, lpServiceStatus *types.SERVICE_STATUS) types.BOOL {
 	ret, _, _ := advapi32.ProcQueryServiceStatus.Call(
 		uintptr(hService),
 		uintptr(unsafe.Pointer(lpServiceStatus)),
@@ -75,7 +75,7 @@ func QueryServiceStatus(hService SC_HANDLE, lpServiceStatus *SERVICE_STATUS) typ
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex
-func QueryServiceStatusEx(hService SC_HANDLE, InfoLevel SC_STATUS_TYPE, lpBuffer *SERVICE_STATUS_PROCESS,
+func QueryServiceStatusEx(hService types.SC_HANDLE, InfoLevel types.SC_STATUS_TYPE, lpBuffer *types.SERVICE_STATUS_PROCESS,
 	cbBufSize types.DWORD, pcbBytesNeeded *types.DWORD) types.BOOL {
 	ret, _, _ := advapi32.ProcQueryServiceStatusEx.Call(
 		uintptr(hService),

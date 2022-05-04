@@ -14,14 +14,14 @@ import (
 )
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-closetrace
-func CloseTrace(TraceHandle TRACEHANDLE) types.ULONG {
+func CloseTrace(TraceHandle advapi32.TRACEHANDLE) types.ULONG {
 	ret, _, _ := advapi32.ProcCloseTrace.Call(uintptr(TraceHandle))
 	return types.ULONG(ret)
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-controltracew
-func ControlTrace(TraceHandle TRACEHANDLE, InstanceName string,
-	Properties PEVENT_TRACE_PROPERTIES, ControlCode types.ULONG) types.ULONG {
+func ControlTrace(TraceHandle advapi32.TRACEHANDLE, InstanceName string,
+	Properties types.PEVENT_TRACE_PROPERTIES, ControlCode types.ULONG) types.ULONG {
 	a1, err := syscall.UTF16PtrFromString(InstanceName)
 	if err != nil {
 		return 0
@@ -38,12 +38,12 @@ func ControlTrace(TraceHandle TRACEHANDLE, InstanceName string,
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-opentracew
-func OpenTrace(Logfile PEVENT_TRACE_LOGFILE) TRACEHANDLE {
+func OpenTrace(Logfile types.PEVENT_TRACE_LOGFILE) advapi32.TRACEHANDLE {
 	ret, _, _ := advapi32.ProcOpenTrace.Call(
 		uintptr(unsafe.Pointer(Logfile)),
 	)
 
-	return TRACEHANDLE(ret)
+	return advapi32.TRACEHANDLE(ret)
 }
 
 // func ProcessTrace(
@@ -54,7 +54,7 @@ func OpenTrace(Logfile PEVENT_TRACE_LOGFILE) TRACEHANDLE {
 // ) types.ULONG
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-starttracew
-func StartTrace(TraceHandle PTRACEHANDLE, InstanceName string, Properties PEVENT_TRACE_PROPERTIES) types.ULONG {
+func StartTrace(TraceHandle advapi32.PTRACEHANDLE, InstanceName string, Properties types.PEVENT_TRACE_PROPERTIES) types.ULONG {
 	a1, err := syscall.UTF16PtrFromString(InstanceName)
 	if err != nil {
 		return 0
