@@ -1,6 +1,22 @@
 package main
 
-import "github.com/mel2oo/win32/types"
+import (
+	"runtime"
+	"time"
+	"unsafe"
+
+	"github.com/mel2oo/win32/types"
+)
+
+const (
+	maxStringLen  = 1024
+	maxBufferSize = 1024
+)
+
+var (
+	minBuffers = runtime.NumCPU() * 2
+	maxBuffers = minBuffers + 20
+)
 
 var KernelTraceGUID = types.GUID{
 	Data1: 0x9E814AAD,
@@ -10,5 +26,19 @@ var KernelTraceGUID = types.GUID{
 }
 
 func main() {
-
+	props := types.EVENT_TRACE_PROPERTIES{
+		Wnode: types.WNODE_HEADER{
+			BufferSize: types.ULONG(unsafe.Sizeof(types.EVENT_TRACE_PROPERTIES{}) + 2*maxStringLen),
+			Guid:       KernelTraceGUID,
+			Flags:      types.WNODE_FLAG_TRACED_GUID,
+		},
+		BufferSize:        maxBufferSize,
+		MinimumBuffers:    types.ULONG(minBuffers),
+		MaximumBuffers:    types.ULONG(maxBuffers),
+		LogFileMode:       types.EVENT_TRACE_REAL_TIME_MODE,
+		FlushTimer:        types.ULONG(time.Second.Seconds()),
+		EnableFlags:       types.EVENT_TRACE_FLAG_PROCESS,
+		LogFileNameOffset: 0,
+		LoggerNameOffset:  types.ULONG(unsafe.Sizeof(types.EVENT_TRACE_PROPERTIES{})),
+	}
 }
