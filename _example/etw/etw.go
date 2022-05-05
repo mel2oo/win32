@@ -2,6 +2,7 @@ package main
 
 import (
 	"runtime"
+	"syscall"
 	"time"
 	"unsafe"
 
@@ -53,4 +54,17 @@ func main() {
 	if errno != 0 {
 		return
 	}
+
+	a1, _ := syscall.UTF16PtrFromString(KernelLoggerSession)
+
+	trace := types.EVENT_TRACE_LOGFILE{
+		LoggerName:     a1,
+		BufferCallback: types.PEVENT_TRACE_BUFFER_CALLBACK(syscall.NewCallback(bufferStatsCallback)),
+	}
 }
+
+func bufferStatsCallback(logfile *types.EVENT_TRACE_LOGFILE) uintptr {
+
+}
+
+func processKeventCallback(evt *types.)

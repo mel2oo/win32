@@ -13,7 +13,7 @@ import (
 
 var (
 	amd64   = flag.Bool("amd64", false, "build api in architeture amd64")
-	xmlfile = flag.String("xmlfile", "Windows/Advapi32.xml", "parse xml file")
+	xmlfile = flag.String("xmlfile", "Windows/Tdh.xml", "parse xml file")
 )
 
 func main() {
