@@ -46,12 +46,18 @@ func OpenTrace(Logfile types.PEVENT_TRACE_LOGFILE) advapi32.TRACEHANDLE {
 	return advapi32.TRACEHANDLE(ret)
 }
 
-// func ProcessTrace(
-// 	HandleArray PTRACEHANDLE,
-// 	HandleCount types.ULONG,
-// 	StartTime LPFILETIME,
-// 	EndTime LPFILETIME,
-// ) types.ULONG
+// https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-processtrace
+func ProcessTrace(HandleArray advapi32.PTRACEHANDLE, HandleCount types.ULONG,
+	StartTime types.LPFILETIME, EndTime types.LPFILETIME) types.ULONG {
+	ret, _, _ := advapi32.ProcProcessTrace.Call(
+		uintptr(unsafe.Pointer(HandleArray)),
+		uintptr(HandleCount),
+		uintptr(unsafe.Pointer(StartTime)),
+		uintptr(unsafe.Pointer(EndTime)),
+	)
+
+	return types.ULONG(ret)
+}
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-starttracew
 func StartTrace(TraceHandle advapi32.PTRACEHANDLE, InstanceName string, Properties types.PEVENT_TRACE_PROPERTIES) types.ULONG {
@@ -69,4 +75,15 @@ func StartTrace(TraceHandle advapi32.PTRACEHANDLE, InstanceName string, Properti
 	return types.ULONG(ret)
 }
 
-func TraceSetInformation()
+// https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-tracesetinformation
+func TraceSetInformation(SessionHandle advapi32.TRACEHANDLE, InformationClass advapi32.TRACE_INFO_CLASS,
+	TraceInformation types.PVOID, InformationLength types.ULONG) types.ULONG {
+	ret, _, _ := advapi32.ProcTraceSetInformation.Call(
+		uintptr(SessionHandle),
+		uintptr(InformationClass),
+		uintptr(unsafe.Pointer(&TraceInformation)),
+		uintptr(InformationClass),
+	)
+
+	return types.ULONG(ret)
+}

@@ -5,12 +5,15 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/mel2oo/win32/advapi32"
+	"github.com/mel2oo/win32/advapi32/evntrace"
 	"github.com/mel2oo/win32/types"
 )
 
 const (
-	maxStringLen  = 1024
-	maxBufferSize = 1024
+	KernelLoggerSession = "NT Kernel Logger"
+	maxStringLen        = 1024
+	maxBufferSize       = 1024
 )
 
 var (
@@ -40,5 +43,14 @@ func main() {
 		EnableFlags:       types.EVENT_TRACE_FLAG_PROCESS,
 		LogFileNameOffset: 0,
 		LoggerNameOffset:  types.ULONG(unsafe.Sizeof(types.EVENT_TRACE_PROPERTIES{})),
+	}
+
+	var (
+		errno  types.ULONG
+		handle advapi32.TRACEHANDLE
+	)
+	errno = evntrace.StartTrace(&handle, KernelLoggerSession, &props)
+	if errno != 0 {
+		return
 	}
 }
