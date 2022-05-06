@@ -144,7 +144,7 @@
             <Field Type="ULONG"                 Name="MaximumBuffers" />
             <Field Type="ULONG"                 Name="MaximumFileSize" />
             <Field Type="[EventLogFileMode]"    Name="LogFileMode" />
-            <Field Type="ULONG"                 Name="FlushTimer" />
+            <Field Type="ULONG"                 Name="Timer" />
             <Field Type="[EventEnableFlags]"    Name="EnableFlags" />
             <Field Type="LONG"                  Name="AgeLimit" />
             <Field Type="ULONG"                 Name="NumberOfBuffers" />

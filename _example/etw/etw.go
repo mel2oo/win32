@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"runtime"
 	"syscall"
 	"time"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/mel2oo/win32/advapi32"
 	"github.com/mel2oo/win32/advapi32/evntrace"
+	"github.com/mel2oo/win32/tdh"
 	"github.com/mel2oo/win32/types"
 )
 
@@ -18,8 +20,9 @@ const (
 )
 
 var (
-	minBuffers = runtime.NumCPU() * 2
-	maxBuffers = minBuffers + 20
+	callbackNext = uintptr(1)
+	minBuffers   = runtime.NumCPU() * 2
+	maxBuffers   = minBuffers + 20
 )
 
 var KernelTraceGUID = types.GUID{
@@ -47,24 +50,52 @@ func main() {
 	}
 
 	var (
-		errno  types.ULONG
-		handle advapi32.TRACEHANDLE
+		errno   types.ULONG
+		handle1 advapi32.TRACEHANDLE
+		handle2 advapi32.TRACEHANDLE
 	)
-	errno = evntrace.StartTrace(&handle, KernelLoggerSession, &props)
+	errno = evntrace.StartTrace(&handle1, KernelLoggerSession, &props)
 	if errno != 0 {
-		return
+		if errno == types.ULONG(types.ERROR_ALREADY_EXISTS) {
+			errno = evntrace.ControlTrace(0, KernelLoggerSession, &props, 0)
+			errno = evntrace.ControlTrace(0, KernelLoggerSession, &props, 1)
+		}
+		errno = evntrace.StartTrace(&handle1, KernelLoggerSession, &props)
+		if errno != 0 {
+			return
+		}
 	}
 
 	a1, _ := syscall.UTF16PtrFromString(KernelLoggerSession)
 
 	trace := types.EVENT_TRACE_LOGFILE{
 		LoggerName:     a1,
+		LogFileMode:    types.EVENT_TRACE_REAL_TIME_MODE | types.EVENT_TRACE_NO_PER_PROCESSOR_BUFFERING,
 		BufferCallback: types.PEVENT_TRACE_BUFFER_CALLBACK(syscall.NewCallback(bufferStatsCallback)),
+		EventCallback:  syscall.NewCallback(processKeventCallback),
 	}
+
+	handle2 = evntrace.OpenTrace(&trace)
+
+	go func() {
+		errno = evntrace.ProcessTrace(&handle2, 1, nil, nil)
+		if errno == types.ULONG(types.ERROR_SUCCESS) {
+			fmt.Println("process trace close success")
+			return
+		}
+
+		fmt.Println(errno)
+	}()
+
+	select {}
 }
 
 func bufferStatsCallback(logfile *types.EVENT_TRACE_LOGFILE) uintptr {
-
+	fmt.Println("bufferStatsCallback")
+	return callbackNext
 }
 
-func processKeventCallback(evt *types.)
+func processKeventCallback(evt *tdh.EVENT_RECORD) uintptr {
+	fmt.Println("processKeventCallback")
+	return callbackNext
+}

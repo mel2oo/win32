@@ -367,14 +367,14 @@ type EVENT_TRACE_LOGFILE struct {
 	LoggerName     LPWSTR
 	CurrentTime    LONGLONG
 	BuffersRead    ULONG
-	U1             EVENT_TRACE_LOGFILE_u1
+	LogFileMode    EventLogFileMode
 	CurrentEvent   EVENT_TRACE
 	LogfileHeader  TRACE_LOGFILE_HEADER
 	BufferCallback PEVENT_TRACE_BUFFER_CALLBACK
 	BufferSize     ULONG
 	Filled         ULONG
 	EventsLost     ULONG
-	U2             EVENT_TRACE_LOGFILE_u2
+	EventCallback  uintptr
 	IsKernelTrace  ULONG
 	Context        PVOID
 }
