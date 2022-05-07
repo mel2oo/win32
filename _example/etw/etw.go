@@ -60,11 +60,12 @@ func main() {
 		if errno == types.ULONG(types.ERROR_ALREADY_EXISTS) {
 			errno = evntrace.ControlTrace(0, KernelLoggerSession, &props, types.ULONG(advapi32.EVENT_TRACE_CONTROL_QUERY))
 			errno = evntrace.ControlTrace(0, KernelLoggerSession, &props, types.ULONG(advapi32.EVENT_TRACE_CONTROL_STOP))
+			errno = evntrace.StartTrace(&handle1, KernelLoggerSession, &props)
+			if errno != 0 {
+				return
+			}
 		}
-		errno = evntrace.StartTrace(&handle1, KernelLoggerSession, &props)
-		if errno != 0 {
-			return
-		}
+		return
 	}
 
 	sysTraceFlags := make([]uint32, 8)

@@ -349,6 +349,26 @@ const (
 	EVENT_HEADER_PROPERTY_LEGACY_EVENTLOG EVENT_HEADER_PROPERTY = 0x0004
 )
 
+// EventDescriptor
+type EventDescriptor struct {
+	// ID represents event identifier.
+	ID uint16
+	// Version indicates a revision to the event definition.
+	Version uint8
+	// Channel is the audience for the event (e.g. administrator or developer).
+	Channel uint8
+	// Level is the severity or level of detail included in the event.
+	Level uint8
+	// Opcode is step in a sequence of operations being performed within the `Task` field. For MOF-defined events,
+	// the `Opcode` member contains the event type value.
+	Opcode uint8
+	// Task represents a larger unit of work within an application or component.
+	Task uint16
+	// Keyword A bitmask that specifies a logical group of related events. Each bit corresponds to one group. An event may belong to one or more groups.
+	// The keyword can contain one or more provider-defined keywords, standard keywords, or both.
+	Keyword uint64
+}
+
 // EVENT_HEADER
 type EVENT_HEADER struct {
 	Size            types.USHORT
@@ -359,8 +379,8 @@ type EVENT_HEADER struct {
 	ProcessId       types.ULONG
 	TimeStamp       types.LARGE_INTEGER
 	ProviderId      types.GUID
-	EventDescriptor types.LPVOID
-	U1              EVENT_HEADER_u
+	EventDescriptor EventDescriptor
+	ProcessorTime   types.ULONG64
 	ActivityId      types.GUID
 }
 
