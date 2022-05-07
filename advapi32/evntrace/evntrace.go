@@ -77,7 +77,7 @@ func StartTrace(TraceHandle advapi32.PTRACEHANDLE, InstanceName string, Properti
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-tracesetinformation
 func TraceSetInformation(SessionHandle advapi32.TRACEHANDLE, InformationClass advapi32.TRACE_INFO_CLASS,
-	TraceInformation types.PVOID, InformationLength types.ULONG) types.ULONG {
+	TraceInformation uint32, InformationLength types.ULONG) types.ULONG {
 	ret, _, _ := advapi32.ProcTraceSetInformation.Call(
 		uintptr(SessionHandle),
 		uintptr(InformationClass),

@@ -14,9 +14,10 @@ import (
 )
 
 const (
-	KernelLoggerSession = "NT Kernel Logger"
-	maxStringLen        = 1024
-	maxBufferSize       = 1024
+	KernelLoggerSession             = "NT Kernel Logger"
+	maxStringLen                    = 1024
+	maxBufferSize                   = 1024
+	evtBufferSize       types.ULONG = 4096
 )
 
 var (
@@ -57,13 +58,32 @@ func main() {
 	errno = evntrace.StartTrace(&handle1, KernelLoggerSession, &props)
 	if errno != 0 {
 		if errno == types.ULONG(types.ERROR_ALREADY_EXISTS) {
-			errno = evntrace.ControlTrace(0, KernelLoggerSession, &props, 0)
-			errno = evntrace.ControlTrace(0, KernelLoggerSession, &props, 1)
+			errno = evntrace.ControlTrace(0, KernelLoggerSession, &props, types.ULONG(advapi32.EVENT_TRACE_CONTROL_QUERY))
+			errno = evntrace.ControlTrace(0, KernelLoggerSession, &props, types.ULONG(advapi32.EVENT_TRACE_CONTROL_STOP))
 		}
 		errno = evntrace.StartTrace(&handle1, KernelLoggerSession, &props)
 		if errno != 0 {
 			return
 		}
+	}
+
+	sysTraceFlags := make([]uint32, 8)
+	errno = evntrace.TraceSetInformation(
+		handle1,
+		advapi32.TraceSystemTraceEnableFlagsInfo,
+		sysTraceFlags[0], 8)
+	if errno != 0 {
+		return
+	}
+	sysTraceFlags[0] = uint32(types.EVENT_TRACE_FLAG_PROCESS)
+	sysTraceFlags[4] = uint32(handle1)
+
+	errno = evntrace.TraceSetInformation(
+		handle1,
+		advapi32.TraceSystemTraceEnableFlagsInfo,
+		sysTraceFlags[0], 8)
+	if errno != 0 {
+		return
 	}
 
 	a1, _ := syscall.UTF16PtrFromString(KernelLoggerSession)
@@ -97,5 +117,14 @@ func bufferStatsCallback(logfile *types.EVENT_TRACE_LOGFILE) uintptr {
 
 func processKeventCallback(evt *tdh.EVENT_RECORD) uintptr {
 	fmt.Println("processKeventCallback")
+
+	bufferSize := evtBufferSize
+	buffer := tdh.TRACE_EVENT_INFO{}
+
+	errno := tdh.TdhGetEventInformation(evt, 0, nil, &buffer, &bufferSize)
+	if errno != types.ERROR_SUCCESS {
+		return callbackNext
+	}
+
 	return callbackNext
 }

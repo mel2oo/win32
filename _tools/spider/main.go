@@ -22,7 +22,7 @@ const evalJS = `
 `
 
 func main() {
-	url := flag.String("url", "https://docs.microsoft.com/en-us/windows/win32/api/winreg/", "")
+	url := flag.String("url", "https://docs.microsoft.com/en-us/windows/win32/api/tdh/", "")
 	flag.Parse()
 
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
