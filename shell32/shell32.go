@@ -1,6 +1,11 @@
 package shell32
 
-import "golang.org/x/sys/windows"
+import (
+	"unsafe"
+
+	"github.com/mel2oo/win32/types"
+	"golang.org/x/sys/windows"
+)
 
 var (
 	dll = windows.NewLazyDLL("shell32.dll")
@@ -55,3 +60,9 @@ var (
 	procSHSetUnreadMailCount                  = dll.NewProc("SHSetUnreadMailCountW")
 	procSHTestTokenMembership                 = dll.NewProc("SHTestTokenMembership")
 )
+
+// https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw
+func ShellExecuteExW(lpExecInfo *types.SHELLEXECUTEINFO) types.BOOL {
+	ret, _, _ := procShellExecuteEx.Call(uintptr(unsafe.Pointer(lpExecInfo)))
+	return types.BOOL(ret)
+}

@@ -27,6 +27,13 @@
             "program": "${workspaceFolder}/_example/queryservices"
         },
         {
+            "name": "shellexec",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/_example/createprocess"
+        },
+        {
             "name": "etw",
             "type": "go",
             "request": "launch",
