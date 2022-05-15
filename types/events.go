@@ -23,43 +23,43 @@ type WNODE_HEADER_u2 struct {
 	CountLost ULONG
 }
 
-// WNODE_HEADER_Flags
-type WNODE_HEADER_Flags ULONG
+// WnodeHeaderFlags
+type WnodeHeaderFlags ULONG
 
 const (
-	WNODE_FLAG_ALL_DATA              WNODE_HEADER_Flags = 0x00000001
-	WNODE_FLAG_SINGLE_INSTANCE       WNODE_HEADER_Flags = 0x00000002
-	WNODE_FLAG_SINGLE_ITEM           WNODE_HEADER_Flags = 0x00000004
-	WNODE_FLAG_EVENT_ITEM            WNODE_HEADER_Flags = 0x00000008
-	WNODE_FLAG_FIXED_INSTANCE_SIZE   WNODE_HEADER_Flags = 0x00000010
-	WNODE_FLAG_TOO_SMALL             WNODE_HEADER_Flags = 0x00000020
-	WNODE_FLAG_INSTANCES_SAME        WNODE_HEADER_Flags = 0x00000040
-	WNODE_FLAG_STATIC_INSTANCE_NAMES WNODE_HEADER_Flags = 0x00000080
-	WNODE_FLAG_INTERNAL              WNODE_HEADER_Flags = 0x00000100
-	WNODE_FLAG_USE_TIMESTAMP         WNODE_HEADER_Flags = 0x00000200
-	WNODE_FLAG_PERSIST_EVENT         WNODE_HEADER_Flags = 0x00000400
-	WNODE_FLAG_EVENT_REFERENCE       WNODE_HEADER_Flags = 0x00002000
-	WNODE_FLAG_ANSI_INSTANCENAMES    WNODE_HEADER_Flags = 0x00004000
-	WNODE_FLAG_METHOD_ITEM           WNODE_HEADER_Flags = 0x00008000
-	WNODE_FLAG_PDO_INSTANCE_NAMES    WNODE_HEADER_Flags = 0x00010000
-	WNODE_FLAG_TRACED_GUID           WNODE_HEADER_Flags = 0x00020000
-	WNODE_FLAG_LOG_WNODE             WNODE_HEADER_Flags = 0x00040000
-	WNODE_FLAG_USE_GUID_PTR          WNODE_HEADER_Flags = 0x00080000
-	WNODE_FLAG_USE_MOF_PTR           WNODE_HEADER_Flags = 0x00100000
-	WNODE_FLAG_NO_HEADER             WNODE_HEADER_Flags = 0x00200000
-	WNODE_FLAG_SEND_DATA_BLOCK       WNODE_HEADER_Flags = 0x00400000
-	WNODE_FLAG_SEVERITY_MASK         WNODE_HEADER_Flags = 0xff000000
+	WnodeFlagAllData             WnodeHeaderFlags = 0x00000001
+	WnodeFlagSingleInstance      WnodeHeaderFlags = 0x00000002
+	WnodeFlagSingleItem          WnodeHeaderFlags = 0x00000004
+	WnodeFlagEventItem           WnodeHeaderFlags = 0x00000008
+	WnodeFlagFixedInstanceSize   WnodeHeaderFlags = 0x00000010
+	WnodeFlagTooSmall            WnodeHeaderFlags = 0x00000020
+	WnodeFlagInstancesSame       WnodeHeaderFlags = 0x00000040
+	WnodeFlagStaticInstanceNames WnodeHeaderFlags = 0x00000080
+	WnodeFlagInternal            WnodeHeaderFlags = 0x00000100
+	WnodeFlagUseTimestamp        WnodeHeaderFlags = 0x00000200
+	WnodeFlagPersistEvent        WnodeHeaderFlags = 0x00000400
+	WnodeFlagEventReference      WnodeHeaderFlags = 0x00002000
+	WnodeFlagAnsiInstanceNames   WnodeHeaderFlags = 0x00004000
+	WnodeFlagMethodItem          WnodeHeaderFlags = 0x00008000
+	WnodeFlagPDOInstanceNames    WnodeHeaderFlags = 0x00010000
+	WnodeFlagTracedGUID          WnodeHeaderFlags = 0x00020000
+	WnodeFlagLogWnode            WnodeHeaderFlags = 0x00040000
+	WnodeFlagUseGuidPtr          WnodeHeaderFlags = 0x00080000
+	WnodeFlagUseMofPtr           WnodeHeaderFlags = 0x00100000
+	WnodeFlagNoHeader            WnodeHeaderFlags = 0x00200000
+	WnodeFlagSendDataBlock       WnodeHeaderFlags = 0x00400000
+	WnodeFlagSeverityMask        WnodeHeaderFlags = 0xff000000
 )
 
-// WNODE_HEADER
-type WNODE_HEADER struct {
-	BufferSize    ULONG
-	ProviderId    ULONG
-	U1            WNODE_HEADER_u1
-	U2            WNODE_HEADER_u2
-	Guid          GUID
-	ClientContext ULONG
-	Flags         WNODE_HEADER_Flags
+// WnodeHeader
+type WnodeHeader struct {
+	BufferSize        ULONG
+	ProviderId        ULONG
+	HistoricalContext ULONG64
+	KernelHandle      HANDLE
+	Guid              GUID
+	ClientContext     ULONG
+	Flags             WnodeHeaderFlags
 }
 
 // EventLogFileMode
@@ -126,7 +126,7 @@ const (
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/ns-evntrace-event_trace_properties
 type EventTraceProperties struct {
-	Wnode               WNODE_HEADER
+	Wnode               WnodeHeader
 	BufferSize          ULONG
 	MinimumBuffers      ULONG
 	MaximumBuffers      ULONG
@@ -219,7 +219,7 @@ type EVENT_TRACE_HEADER_u4_s1 struct {
 // EVENT_TRACE_HEADER_u4_s2
 type EVENT_TRACE_HEADER_u4_s2 struct {
 	ClientContext ULONG
-	Flags         WNODE_HEADER_Flags
+	Flags         WnodeHeaderFlags
 }
 
 // EVENT_TRACE_HEADER_u4
@@ -243,7 +243,7 @@ type PEVENT_TRACE_HEADER *EVENT_TRACE_HEADER
 // EVENT_INSTANCE_HEADER_u1_s
 type EVENT_INSTANCE_HEADER_u1_s struct {
 	EventId ULONG
-	Flags   WNODE_HEADER_Flags
+	Flags   WnodeHeaderFlags
 }
 
 // EVENT_INSTANCE_HEADER_u
