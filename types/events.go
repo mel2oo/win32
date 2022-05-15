@@ -66,27 +66,27 @@ type WnodeHeader struct {
 type EventLogFileMode ULONG
 
 const (
-	EVENT_TRACE_FILE_MODE_NONE             EventLogFileMode = 0x00000000
-	EVENT_TRACE_FILE_MODE_SEQUENTIAL       EventLogFileMode = 0x00000001
-	EVENT_TRACE_FILE_MODE_CIRCULAR         EventLogFileMode = 0x00000002
-	EVENT_TRACE_FILE_MODE_APPEND           EventLogFileMode = 0x00000004
-	EVENT_TRACE_REAL_TIME_MODE             EventLogFileMode = 0x00000100
-	EVENT_TRACE_DELAY_OPEN_FILE_MODE       EventLogFileMode = 0x00000200
-	EVENT_TRACE_BUFFERING_MODE             EventLogFileMode = 0x00000400
-	EVENT_TRACE_PRIVATE_LOGGER_MODE        EventLogFileMode = 0x00000800
-	EVENT_TRACE_ADD_HEADER_MODE            EventLogFileMode = 0x00001000
-	EVENT_TRACE_USE_GLOBAL_SEQUENCE        EventLogFileMode = 0x00004000
-	EVENT_TRACE_USE_LOCAL_SEQUENCE         EventLogFileMode = 0x00008000
-	EVENT_TRACE_RELOG_MODE                 EventLogFileMode = 0x00010000
-	EVENT_TRACE_USE_PAGED_MEMORY           EventLogFileMode = 0x01000000
-	EVENT_TRACE_FILE_MODE_NEWFILE          EventLogFileMode = 0x00000008
-	EVENT_TRACE_FILE_MODE_PREALLOCATE      EventLogFileMode = 0x00000020
-	EVENT_TRACE_NONSTOPPABLE_MODE          EventLogFileMode = 0x00000040
-	EVENT_TRACE_SECURE_MODE                EventLogFileMode = 0x00000080
-	EVENT_TRACE_USE_KBYTES_FOR_SIZE        EventLogFileMode = 0x00002000
-	EVENT_TRACE_PRIVATE_IN_PROC            EventLogFileMode = 0x00020000
-	EVENT_TRACE_MODE_RESERVED              EventLogFileMode = 0x00100000
-	EVENT_TRACE_NO_PER_PROCESSOR_BUFFERING EventLogFileMode = 0x10000000
+	EventTraceFileModeNone            EventLogFileMode = 0x00000000
+	EventTraceFileModeSequential      EventLogFileMode = 0x00000001
+	EventTraceFileModeCircular        EventLogFileMode = 0x00000002
+	EventTraceFileModeAppend          EventLogFileMode = 0x00000004
+	EventTraceRealTimeMode            EventLogFileMode = 0x00000100
+	EventTraceDelayOpenFileMode       EventLogFileMode = 0x00000200
+	EventTraceBufferingMode           EventLogFileMode = 0x00000400
+	EventTracePrivateLoggerMode       EventLogFileMode = 0x00000800
+	EventTraceAddHeaderMode           EventLogFileMode = 0x00001000
+	EventTraceUseGlobalSequence       EventLogFileMode = 0x00004000
+	EventTraceUseLocalSequence        EventLogFileMode = 0x00008000
+	EventTraceRelogMode               EventLogFileMode = 0x00010000
+	EventTraceUsePagedMemory          EventLogFileMode = 0x01000000
+	EventTraceFileModeNewFile         EventLogFileMode = 0x00000008
+	EventTraceFileModePreAllocate     EventLogFileMode = 0x00000020
+	EventTraceNonStoppableMode        EventLogFileMode = 0x00000040
+	EventTraceSecureMode              EventLogFileMode = 0x00000080
+	EventTraceUseKbytesForSize        EventLogFileMode = 0x00002000
+	EventTracePrivateInProc           EventLogFileMode = 0x00020000
+	EventTraceModeReserved            EventLogFileMode = 0x00100000
+	EventTraceNoPerProcessorBuffering EventLogFileMode = 0x10000000
 )
 
 // EventEnableFlags
