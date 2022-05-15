@@ -34,9 +34,9 @@ var KernelTraceGUID = types.GUID{
 }
 
 func main() {
-	props := types.EVENT_TRACE_PROPERTIES{
+	props := types.EventTraceProperties{
 		Wnode: types.WNODE_HEADER{
-			BufferSize: types.ULONG(unsafe.Sizeof(types.EVENT_TRACE_PROPERTIES{}) + 2*maxStringLen),
+			BufferSize: types.ULONG(unsafe.Sizeof(types.EventTraceProperties{}) + 2*maxStringLen),
 			Guid:       KernelTraceGUID,
 			Flags:      types.WNODE_FLAG_TRACED_GUID,
 		},
@@ -45,9 +45,9 @@ func main() {
 		MaximumBuffers:    types.ULONG(maxBuffers),
 		LogFileMode:       types.EVENT_TRACE_REAL_TIME_MODE,
 		FlushTimer:        types.ULONG(time.Second.Seconds()),
-		EnableFlags:       types.EVENT_TRACE_FLAG_PROCESS,
+		EnableFlags:       types.EventTraceFlagProcess,
 		LogFileNameOffset: 0,
-		LoggerNameOffset:  types.ULONG(unsafe.Sizeof(types.EVENT_TRACE_PROPERTIES{})),
+		LoggerNameOffset:  types.ULONG(unsafe.Sizeof(types.EventTraceProperties{})),
 	}
 
 	var (
@@ -76,7 +76,7 @@ func main() {
 	if errno != 0 {
 		return
 	}
-	sysTraceFlags[0] = uint32(types.EVENT_TRACE_FLAG_PROCESS)
+	sysTraceFlags[0] = uint32(types.EventTraceFlagProcess)
 	sysTraceFlags[4] = uint32(handle1)
 
 	errno = evntrace.TraceSetInformation(

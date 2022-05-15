@@ -21,7 +21,7 @@ func CloseTrace(TraceHandle advapi32.TRACEHANDLE) types.ULONG {
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-controltracew
 func ControlTrace(TraceHandle advapi32.TRACEHANDLE, InstanceName string,
-	Properties types.PEVENT_TRACE_PROPERTIES, ControlCode types.ULONG) types.ULONG {
+	Properties *types.EventTraceProperties, ControlCode types.ULONG) types.ULONG {
 	a1, err := syscall.UTF16PtrFromString(InstanceName)
 	if err != nil {
 		return 0
@@ -60,7 +60,7 @@ func ProcessTrace(HandleArray advapi32.PTRACEHANDLE, HandleCount types.ULONG,
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-starttracew
-func StartTrace(TraceHandle advapi32.PTRACEHANDLE, InstanceName string, Properties types.PEVENT_TRACE_PROPERTIES) types.ULONG {
+func StartTrace(TraceHandle advapi32.PTRACEHANDLE, InstanceName string, Properties *types.EventTraceProperties) types.ULONG {
 	a1, err := syscall.UTF16PtrFromString(InstanceName)
 	if err != nil {
 		return 0

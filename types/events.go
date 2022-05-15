@@ -93,37 +93,39 @@ const (
 type EventEnableFlags ULONG
 
 const (
-	EVENT_TRACE_FLAG_PROCESS            EventEnableFlags = 0x00000001
-	EVENT_TRACE_FLAG_THREAD             EventEnableFlags = 0x00000002
-	EVENT_TRACE_FLAG_IMAGE_LOAD         EventEnableFlags = 0x00000004
-	EVENT_TRACE_FLAG_DISK_IO            EventEnableFlags = 0x00000100
-	EVENT_TRACE_FLAG_DISK_FILE_IO       EventEnableFlags = 0x00000200
-	EVENT_TRACE_FLAG_MEMORY_PAGE_FAULTS EventEnableFlags = 0x00001000
-	EVENT_TRACE_FLAG_MEMORY_HARD_FAULTS EventEnableFlags = 0x00002000
-	EVENT_TRACE_FLAG_NETWORK_TCPIP      EventEnableFlags = 0x00010000
-	EVENT_TRACE_FLAG_REGISTRY           EventEnableFlags = 0x00020000
-	EVENT_TRACE_FLAG_DBGPRINT           EventEnableFlags = 0x00040000
-	EVENT_TRACE_FLAG_PROCESS_COUNTERS   EventEnableFlags = 0x00000008
-	EVENT_TRACE_FLAG_CSWITCH            EventEnableFlags = 0x00000010
-	EVENT_TRACE_FLAG_DPC                EventEnableFlags = 0x00000020
-	EVENT_TRACE_FLAG_INTERRUPT          EventEnableFlags = 0x00000040
-	EVENT_TRACE_FLAG_SYSTEMCALL         EventEnableFlags = 0x00000080
-	EVENT_TRACE_FLAG_DISK_IO_INIT       EventEnableFlags = 0x00000400
-	EVENT_TRACE_FLAG_ALPC               EventEnableFlags = 0x00100000
-	EVENT_TRACE_FLAG_SPLIT_IO           EventEnableFlags = 0x00200000
-	EVENT_TRACE_FLAG_DRIVER             EventEnableFlags = 0x00800000
-	EVENT_TRACE_FLAG_PROFILE            EventEnableFlags = 0x01000000
-	EVENT_TRACE_FLAG_FILE_IO            EventEnableFlags = 0x02000000
-	EVENT_TRACE_FLAG_FILE_IO_INIT       EventEnableFlags = 0x04000000
-	EVENT_TRACE_FLAG_DISPATCHER         EventEnableFlags = 0x00000800
-	EVENT_TRACE_FLAG_VIRTUAL_ALLOC      EventEnableFlags = 0x00004000
-	EVENT_TRACE_FLAG_EXTENSION          EventEnableFlags = 0x80000000
-	EVENT_TRACE_FLAG_FORWARD_WMI        EventEnableFlags = 0x40000000
-	EVENT_TRACE_FLAG_ENABLE_RESERVE     EventEnableFlags = 0x20000000
+	EventTraceFlagProcess          EventEnableFlags = 0x00000001
+	EventTraceFlagThread           EventEnableFlags = 0x00000002
+	EventTraceFlagImageLoad        EventEnableFlags = 0x00000004
+	EventTraceFlagProcessCounters  EventEnableFlags = 0x00000008
+	EventTraceFlagCSwitch          EventEnableFlags = 0x00000010
+	EventTraceFlagDPC              EventEnableFlags = 0x00000020
+	EventTraceFlagInterrupt        EventEnableFlags = 0x00000040
+	EventTraceFlagSystemcall       EventEnableFlags = 0x00000080
+	EventTraceFlagDiskIO           EventEnableFlags = 0x00000100
+	EventTraceFlagDiskFileIO       EventEnableFlags = 0x00000200
+	EventTraceFlagDiskIOInit       EventEnableFlags = 0x00000400
+	EventTraceFlagDispatcher       EventEnableFlags = 0x00000800
+	EventTraceFlagMemoryPageFaults EventEnableFlags = 0x00001000
+	EventTraceFlagMemoryHardFaults EventEnableFlags = 0x00002000
+	EventTraceFlagVirtualAlloc     EventEnableFlags = 0x00004000
+	EventTraceFlagVaMap            EventEnableFlags = 0x00008000
+	EventTraceFlagNetworkTCPIP     EventEnableFlags = 0x00010000
+	EventTraceFlagRegistry         EventEnableFlags = 0x00020000
+	EventTraceFlagDbgPrint         EventEnableFlags = 0x00040000
+	EventTraceFlagJOB              EventEnableFlags = 0x00080000
+	EventTraceFlagALPC             EventEnableFlags = 0x00100000
+	EventTraceFlagSplitIO          EventEnableFlags = 0x00200000
+	EventTraceFlagDriver           EventEnableFlags = 0x00800000
+	EventTraceFlagProfile          EventEnableFlags = 0x01000000
+	EventTraceFlagFileIO           EventEnableFlags = 0x02000000
+	EventTraceFlagFileIOInit       EventEnableFlags = 0x04000000
+	EventTraceFlagEnableReserve    EventEnableFlags = 0x20000000
+	EventTraceFlagForwardWMI       EventEnableFlags = 0x40000000
+	EventTraceFlagExtension        EventEnableFlags = 0x80000000
 )
 
-// EVENT_TRACE_PROPERTIES
-type EVENT_TRACE_PROPERTIES struct {
+// https://docs.microsoft.com/en-us/windows/win32/api/evntrace/ns-evntrace-event_trace_properties
+type EventTraceProperties struct {
 	Wnode               WNODE_HEADER
 	BufferSize          ULONG
 	MinimumBuffers      ULONG
@@ -143,8 +145,6 @@ type EVENT_TRACE_PROPERTIES struct {
 	LogFileNameOffset   ULONG
 	LoggerNameOffset    ULONG
 }
-
-type PEVENT_TRACE_PROPERTIES *EVENT_TRACE_PROPERTIES
 
 // EVENT_TRACE_HEADER_u1_s
 type EVENT_TRACE_HEADER_u1_s struct {
