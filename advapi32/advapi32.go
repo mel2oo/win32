@@ -722,8 +722,6 @@ type (
 	PFE_IMPORT_FUNC         types.LPVOID
 	LPHANDLER_FUNCTION      types.LPVOID
 	LPHANDLER_FUNCTION_EX   types.LPVOID
-	TRACEHANDLE             types.ULONG64
-	PTRACEHANDLE            *TRACEHANDLE
 	WMIDPREQUEST            types.LPVOID
 	ENABLECALLBACK          types.LPVOID
 	FN_PROGRESS             types.LPVOID
