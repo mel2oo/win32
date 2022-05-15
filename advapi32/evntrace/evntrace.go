@@ -55,6 +55,13 @@ var (
 	}
 )
 
+const (
+	KernelLoggerName = "NT Kernel Logger"
+	GlobalLoggerName = "GlobalLogger"
+	EventLoggerName  = "EventLog"
+	DiagLoggerName   = "DiagLog"
+)
+
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-closetrace
 func CloseTrace(TraceHandle advapi32.TRACEHANDLE) types.ULONG {
 	ret, _, _ := advapi32.ProcCloseTrace.Call(uintptr(TraceHandle))
