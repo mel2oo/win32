@@ -13,6 +13,48 @@ import (
 	"github.com/mel2oo/win32/types"
 )
 
+var (
+	// EventTraceGuid is used to identify a event tracing session
+	EventTraceGuid = syscall.GUID{
+		Data1: 0x68fdd900,
+		Data2: 0x4a3e,
+		Data3: 0x11d1,
+		Data4: [8]byte{0x84, 0xf4, 0x00, 0x00, 0xf8, 0x04, 0x64, 0xe3},
+	}
+
+	// SystemTraceControlGuid. Used to specify event tracing for kernel
+	SystemTraceControlGuid = syscall.GUID{
+		Data1: 0x9e814aad,
+		Data2: 0x3204,
+		Data3: 0x11d2,
+		Data4: [8]byte{0x9a, 0x82, 0x00, 0x60, 0x08, 0xa8, 0x69, 0x39},
+	}
+
+	// EventTraceConfigGuid. Used to report system configuration records
+	EventTraceConfigGuid = syscall.GUID{
+		Data1: 0x01853a65,
+		Data2: 0x418f,
+		Data3: 0x4f36,
+		Data4: [8]byte{0xae, 0xfc, 0xdc, 0x0f, 0x1d, 0x2f, 0xd2, 0x35},
+	}
+
+	// DefaultTraceSecurityGuid. Specifies the default event tracing security
+	DefaultTraceSecurityGuid = syscall.GUID{
+		Data1: 0x0811c1af,
+		Data2: 0x7a07,
+		Data3: 0x4a06,
+		Data4: [8]byte{0x82, 0xed, 0x86, 0x94, 0x55, 0xcd, 0xf7, 0x13},
+	}
+
+	// PrivateLoggerNotificationGuid. Used for private cross-process logger notifications.
+	PrivateLoggerNotificationGuid = syscall.GUID{
+		Data1: 0x3595ab5c,
+		Data2: 0x042a,
+		Data3: 0x4c8e,
+		Data4: [8]byte{0xb9, 0x42, 0x2d, 0x05, 0x9b, 0xfe, 0xb1, 0xb1},
+	}
+)
+
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-closetrace
 func CloseTrace(TraceHandle advapi32.TRACEHANDLE) types.ULONG {
 	ret, _, _ := advapi32.ProcCloseTrace.Call(uintptr(TraceHandle))
