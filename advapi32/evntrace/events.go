@@ -178,6 +178,7 @@ const (
 	EventTraceFlagEnableReserve    EventEnableFlags = 0x20000000
 	EventTraceFlagForwardWMI       EventEnableFlags = 0x40000000
 	EventTraceFlagExtension        EventEnableFlags = 0x80000000
+	EventTraceFlagHandle           EventEnableFlags = 0x80000040
 )
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/ns-evntrace-event_trace_properties
