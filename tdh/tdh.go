@@ -37,7 +37,7 @@ var (
 )
 
 // https://docs.microsoft.com/en-us/windows/win32/api/tdh/nf-tdh-tdhgeteventinformation
-func TdhGetEventInformation(Event PEVENT_RECORD, TdhContextCount types.ULONG,
+func TdhGetEventInformation(Event *EventRecord, TdhContextCount types.ULONG,
 	TdhContext PTDH_CONTEXT, Buffer *TRACE_EVENT_INFO, BufferSize *types.ULONG) types.ERROR_CODE {
 	ret, _, _ := procTdhGetEventInformation.Call(
 		uintptr(unsafe.Pointer(Event)),

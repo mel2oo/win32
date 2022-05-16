@@ -81,7 +81,7 @@ func main() {
 
 	a1, _ := syscall.UTF16PtrFromString(evntrace.KernelLoggerName)
 
-	trace := evntrace.EVENT_TRACE_LOGFILE{
+	trace := evntrace.EventTraceLogFile{
 		LoggerName:     a1,
 		LogFileMode:    evntrace.EventTraceRealTimeMode | evntrace.EventTraceNoPerProcessorBuffering,
 		BufferCallback: evntrace.PEVENT_TRACE_BUFFER_CALLBACK(syscall.NewCallback(bufferStatsCallback)),
@@ -103,12 +103,12 @@ func main() {
 	select {}
 }
 
-func bufferStatsCallback(logfile *evntrace.EVENT_TRACE_LOGFILE) uintptr {
+func bufferStatsCallback(logfile *evntrace.EventTraceLogFile) uintptr {
 	fmt.Println("bufferStatsCallback")
 	return callbackNext
 }
 
-func processKeventCallback(evt *tdh.EVENT_RECORD) uintptr {
+func processKeventCallback(evt *tdh.EventRecord) uintptr {
 	fmt.Println("processKeventCallback")
 
 	bufferSize := evtBufferSize

@@ -38,7 +38,7 @@ func ControlTrace(handle TraceHandle, InstanceName string,
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-opentracew
-func OpenTrace(Logfile PEVENT_TRACE_LOGFILE) TraceHandle {
+func OpenTrace(Logfile *EventTraceLogFile) TraceHandle {
 	ret, _, _ := advapi32.ProcOpenTrace.Call(
 		uintptr(unsafe.Pointer(Logfile)),
 	)
@@ -76,12 +76,12 @@ func StartTrace(handle *TraceHandle, InstanceName string, Properties *EventTrace
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-tracesetinformation
-func TraceSetInformation(handle TraceHandle, InformationClass advapi32.TRACE_INFO_CLASS,
-	TraceInformation uint32, InformationLength types.ULONG) types.ULONG {
+func TraceSetInformation(handle TraceHandle, InformationClass TraceInfoClass,
+	TraceInformation []uint32, InformationLength types.ULONG) types.ULONG {
 	ret, _, _ := advapi32.ProcTraceSetInformation.Call(
 		uintptr(handle),
 		uintptr(InformationClass),
-		uintptr(unsafe.Pointer(&TraceInformation)),
+		uintptr(unsafe.Pointer(&TraceInformation[0])),
 		uintptr(InformationClass),
 	)
 

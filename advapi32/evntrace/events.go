@@ -442,8 +442,8 @@ type TRACE_LOGFILE_HEADER struct {
 	BuffersLost        types.ULONG
 }
 
-// EVENT_TRACE_LOGFILE
-type EVENT_TRACE_LOGFILE struct {
+// EventTraceLogFile
+type EventTraceLogFile struct {
 	LogFileName    types.LPWSTR
 	LoggerName     types.LPWSTR
 	CurrentTime    types.LONGLONG
@@ -459,7 +459,6 @@ type EVENT_TRACE_LOGFILE struct {
 	IsKernelTrace  types.ULONG
 	Context        types.PVOID
 }
-type PEVENT_TRACE_LOGFILE *EVENT_TRACE_LOGFILE
 
 // EVENT_INSTANCE_INFO
 type EVENT_INSTANCE_INFO struct {
@@ -513,3 +512,22 @@ const (
 	EVENT_ACTIVITY_CTRL_GET_SET_ID    EventActivity = 4
 	EVENT_ACTIVITY_CTRL_CREATE_SET_ID EventActivity = 5
 )
+
+// TraceInfoClass
+type TraceInfoClass types.UINT
+
+const (
+	TraceGuidQueryList              TraceInfoClass = 0
+	TraceGuidQueryInfo              TraceInfoClass = 1
+	TraceGuidQueryProcess           TraceInfoClass = 2
+	TraceStackTracingInfo           TraceInfoClass = 3
+	TraceSystemTraceEnableFlagsInfo TraceInfoClass = 4
+	TraceSampledProfileIntervalInfo TraceInfoClass = 5
+	TraceProfileSourceConfigInfo    TraceInfoClass = 6
+	TraceProfileSourceListInfo      TraceInfoClass = 7
+	TracePmcEventListInfo           TraceInfoClass = 8
+	TracePmcCounterListInfo         TraceInfoClass = 9
+)
+
+// TraceQueryInfoClass
+type TraceQueryInfoClass TraceInfoClass

@@ -216,25 +216,6 @@ const (
 	SC_ENUM_PROCESS_INFO SC_ENUM_TYPE = 0
 )
 
-// TRACE_INFO_CLASS
-type TRACE_INFO_CLASS types.UINT
-
-const (
-	TraceGuidQueryList              TRACE_INFO_CLASS = 0
-	TraceGuidQueryInfo              TRACE_INFO_CLASS = 1
-	TraceGuidQueryProcess           TRACE_INFO_CLASS = 2
-	TraceStackTracingInfo           TRACE_INFO_CLASS = 3
-	TraceSystemTraceEnableFlagsInfo TRACE_INFO_CLASS = 4
-	TraceSampledProfileIntervalInfo TRACE_INFO_CLASS = 5
-	TraceProfileSourceConfigInfo    TRACE_INFO_CLASS = 6
-	TraceProfileSourceListInfo      TRACE_INFO_CLASS = 7
-	TracePmcEventListInfo           TRACE_INFO_CLASS = 8
-	TracePmcCounterListInfo         TRACE_INFO_CLASS = 9
-)
-
-// TRACE_QUERY_INFO_CLASS
-type TRACE_QUERY_INFO_CLASS TRACE_INFO_CLASS
-
 // PROG_INVOKE_SETTING
 type PROG_INVOKE_SETTING types.UINT
 

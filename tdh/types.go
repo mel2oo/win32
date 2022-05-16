@@ -384,8 +384,8 @@ type EVENT_HEADER struct {
 	ActivityId      types.GUID
 }
 
-// EVENT_RECORD
-type EVENT_RECORD struct {
+// EventRecord
+type EventRecord struct {
 	EventHeader       EVENT_HEADER
 	BufferContext     types.PVOID
 	ExtendedDataCount types.USHORT
@@ -394,5 +394,3 @@ type EVENT_RECORD struct {
 	UserData          types.PVOID
 	UserContext       types.PVOID
 }
-
-type PEVENT_RECORD *EVENT_RECORD
