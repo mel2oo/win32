@@ -57,10 +57,10 @@ const (
 
 // Variables
 type (
-	TraceHandle                  types.ULONG64
-	PEVENT_CALLBACK              types.LPVOID
-	PEVENT_TRACE_BUFFER_CALLBACK types.LPVOID
-	PEVENT_RECORD_CALLBACK       types.LPVOID
+	TraceHandle              types.ULONG64
+	PEVENT_CALLBACK          types.LPVOID
+	EventTraceBufferCallback types.LPVOID
+	PEVENT_RECORD_CALLBACK   types.LPVOID
 )
 
 // WNODE_HEADER_u1_s
@@ -234,11 +234,6 @@ type EVENT_TRACE_HEADER_u1_s struct {
 	MarkerFlags types.UCHAR
 }
 
-// EVENT_TRACE_HEADER_u1
-type EVENT_TRACE_HEADER_u1 struct {
-	FieldTypeFlags types.USHORT
-}
-
 // EVENT_TRACE_TYPE
 type EVENT_TRACE_TYPE types.UCHAR
 
@@ -282,16 +277,6 @@ type EVENT_TRACE_HEADER_u2_s struct {
 	Version types.USHORT
 }
 
-// EVENT_TRACE_HEADER_u2
-type EVENT_TRACE_HEADER_u2 struct {
-	Version types.ULONG
-}
-
-// EVENT_TRACE_HEADER_u3
-type EVENT_TRACE_HEADER_u3 struct {
-	Guid types.GUID
-}
-
 // EVENT_TRACE_HEADER_u4_s1
 type EVENT_TRACE_HEADER_u4_s1 struct {
 	KernelTime types.ULONG
@@ -304,23 +289,17 @@ type EVENT_TRACE_HEADER_u4_s2 struct {
 	Flags         WnodeHeaderFlags
 }
 
-// EVENT_TRACE_HEADER_u4
-type EVENT_TRACE_HEADER_u4 struct {
-	ProcessorTime types.ULONG64
+// EventTraceHeader
+type EventTraceHeader struct {
+	Size           types.USHORT
+	FieldTypeFlags types.USHORT
+	Version        types.ULONG
+	ThreadId       types.ULONG
+	ProcessId      types.ULONG
+	TimeStamp      types.LARGE_INTEGER
+	Guid           types.GUID
+	ProcessorTime  types.ULONG64
 }
-
-// EVENT_TRACE_HEADER
-type EVENT_TRACE_HEADER struct {
-	Size      types.USHORT
-	U1        EVENT_TRACE_HEADER_u1
-	U2        EVENT_TRACE_HEADER_u2
-	ThreadId  types.ULONG
-	ProcessId types.ULONG
-	TimeStamp types.LARGE_INTEGER
-	U3        EVENT_TRACE_HEADER_u3
-	U4        EVENT_TRACE_HEADER_u4
-}
-type PEVENT_TRACE_HEADER *EVENT_TRACE_HEADER
 
 // EVENT_INSTANCE_HEADER_u1_s
 type EVENT_INSTANCE_HEADER_u1_s struct {
@@ -336,8 +315,8 @@ type EVENT_INSTANCE_HEADER_u struct {
 // EVENT_INSTANCE_HEADER
 type EVENT_INSTANCE_HEADER struct {
 	Size             types.USHORT
-	U1               EVENT_TRACE_HEADER_u1
-	U2               EVENT_TRACE_HEADER_u2
+	FieldTypeFlags   types.USHORT
+	Version          types.ULONG
 	ThreadId         types.ULONG
 	ProcessId        types.ULONG
 	TimeStamp        types.LARGE_INTEGER
@@ -376,21 +355,15 @@ type ETW_BUFFER_CONTEXT struct {
 	LoggerId        types.USHORT
 }
 
-// EVENT_TRACE_u
-type EVENT_TRACE_u struct {
-	ClientContext types.ULONG
-	// BufferContext ETW_BUFFER_CONTEXT
-}
-
-// EVENT_TRACE
-type EVENT_TRACE struct {
-	Header           EVENT_TRACE_HEADER
+// EventTrace
+type EventTrace struct {
+	Header           EventTraceHeader
 	InstanceId       types.ULONG
 	ParentInstanceId types.ULONG
 	ParentGuid       types.GUID
 	MofData          types.PVOID
 	MofLength        types.ULONG
-	U                EVENT_TRACE_u
+	ClientContext    types.ULONG
 }
 
 // TRACE_LOGFILE_HEADER_u1_s
@@ -401,30 +374,10 @@ type TRACE_LOGFILE_HEADER_u1_s struct {
 	SubMinorVersion types.UCHAR
 }
 
-// TRACE_LOGFILE_HEADER_u1
-type TRACE_LOGFILE_HEADER_u1 struct {
-	Version types.ULONG
-	// VersionDetail TRACE_LOGFILE_HEADER_u1_s
-}
-
-// TRACE_LOGFILE_HEADER_u2_s
-type TRACE_LOGFILE_HEADER_u2_s struct {
-	StartBuffers  types.ULONG
-	PointerSize   types.ULONG
-	EventsLost    types.ULONG
-	CpuSpeedInMHz types.ULONG
-}
-
-// TRACE_LOGFILE_HEADER_u2
-type TRACE_LOGFILE_HEADER_u2 struct {
-	LogInstanceGuid types.GUID
-	//  [TRACE_LOGFILE_HEADER_u2_s]
-}
-
-// TRACE_LOGFILE_HEADER
-type TRACE_LOGFILE_HEADER struct {
+// TraceLogFileHeader
+type TraceLogFileHeader struct {
 	BufferSize         types.ULONG
-	U1                 TRACE_LOGFILE_HEADER_u1
+	Version            types.ULONG
 	ProviderVersion    types.ULONG
 	NumberOfProcessors types.ULONG
 	EndTime            types.LARGE_INTEGER
@@ -432,7 +385,7 @@ type TRACE_LOGFILE_HEADER struct {
 	MaximumFileSize    types.ULONG
 	LogFileMode        EventLogFileMode
 	BuffersWritten     types.ULONG
-	U2                 TRACE_LOGFILE_HEADER_u2
+	LogInstanceGuid    types.GUID
 	LoggerName         types.LPWSTR
 	LogFileName        types.LPWSTR
 	TimeZone           types.TIME_ZONE_INFORMATION
@@ -450,9 +403,9 @@ type EventTraceLogFile struct {
 	CurrentTime    types.LONGLONG
 	BuffersRead    types.ULONG
 	LogFileMode    EventLogFileMode
-	CurrentEvent   EVENT_TRACE
-	LogfileHeader  TRACE_LOGFILE_HEADER
-	BufferCallback PEVENT_TRACE_BUFFER_CALLBACK
+	CurrentEvent   EventTrace
+	LogfileHeader  TraceLogFileHeader
+	BufferCallback uintptr
 	BufferSize     types.ULONG
 	Filled         types.ULONG
 	EventsLost     types.ULONG

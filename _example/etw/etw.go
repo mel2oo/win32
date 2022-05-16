@@ -7,7 +7,6 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/mel2oo/win32/advapi32"
 	"github.com/mel2oo/win32/advapi32/evntrace"
 	"github.com/mel2oo/win32/tdh"
 	"github.com/mel2oo/win32/types"
@@ -63,8 +62,8 @@ func main() {
 	sysTraceFlags := make([]uint32, 8)
 	errno = evntrace.TraceSetInformation(
 		handle1,
-		advapi32.TraceSystemTraceEnableFlagsInfo,
-		sysTraceFlags[0], 8)
+		evntrace.TraceSystemTraceEnableFlagsInfo,
+		sysTraceFlags, 8)
 	if errno != 0 {
 		return
 	}
@@ -73,8 +72,8 @@ func main() {
 
 	errno = evntrace.TraceSetInformation(
 		handle1,
-		advapi32.TraceSystemTraceEnableFlagsInfo,
-		sysTraceFlags[0], 8)
+		evntrace.TraceSystemTraceEnableFlagsInfo,
+		sysTraceFlags, 8)
 	if errno != 0 {
 		return
 	}
@@ -84,7 +83,7 @@ func main() {
 	trace := evntrace.EventTraceLogFile{
 		LoggerName:     a1,
 		LogFileMode:    evntrace.EventTraceRealTimeMode | evntrace.EventTraceNoPerProcessorBuffering,
-		BufferCallback: evntrace.PEVENT_TRACE_BUFFER_CALLBACK(syscall.NewCallback(bufferStatsCallback)),
+		BufferCallback: syscall.NewCallback(bufferStatsCallback),
 		EventCallback:  syscall.NewCallback(processKeventCallback),
 	}
 
