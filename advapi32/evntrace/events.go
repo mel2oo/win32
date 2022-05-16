@@ -202,6 +202,31 @@ type EventTraceProperties struct {
 	LoggerNameOffset    types.ULONG
 }
 
+// TraceControlCode
+type TraceControlCode types.ULONG
+
+const (
+	EventTraceControlQuery         TraceControlCode = 0
+	EventTraceControlStop          TraceControlCode = 1
+	EventTraceControlUpdate        TraceControlCode = 2
+	EventTraceControlFlush         TraceControlCode = 3
+	EventTraceControlIncrementFile TraceControlCode = 4
+)
+
+// TRACE_MESSAGE_FLAGS
+type TRACE_MESSAGE_FLAGS types.ULONG
+
+const (
+	TRACE_MESSAGE_SEQUENCE              TRACE_MESSAGE_FLAGS = 1
+	TRACE_MESSAGE_GUID                  TRACE_MESSAGE_FLAGS = 2
+	TRACE_MESSAGE_COMPONENTID           TRACE_MESSAGE_FLAGS = 4
+	TRACE_MESSAGE_TIMESTAMP             TRACE_MESSAGE_FLAGS = 8
+	TRACE_MESSAGE_PERFORMANCE_TIMESTAMP TRACE_MESSAGE_FLAGS = 16
+	TRACE_MESSAGE_SYSTEMINFO            TRACE_MESSAGE_FLAGS = 32
+	TRACE_MESSAGE_POINTER32             TRACE_MESSAGE_FLAGS = 0x0040
+	TRACE_MESSAGE_POINTER64             TRACE_MESSAGE_FLAGS = 0x0080
+)
+
 // EVENT_TRACE_HEADER_u1_s
 type EVENT_TRACE_HEADER_u1_s struct {
 	HeaderType  types.UCHAR
