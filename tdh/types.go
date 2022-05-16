@@ -8,8 +8,6 @@ type (
 	PTDH_HANDLE *TDH_HANDLE
 )
 
-type PEVENT_HEADER_EXTENDED_DATA_ITEM types.LPVOID
-
 // TRACE_PROVIDER_INFO
 type TRACE_PROVIDER_INFO struct {
 	ProviderGuid       types.GUID
@@ -326,27 +324,27 @@ type EVENT_HEADER_u struct {
 	ProcessorTime types.ULONG64
 }
 
-// EVENT_HEADER_FLAG
-type EVENT_HEADER_FLAG types.USHORT
+// EventHeaderFlag
+type EventHeaderFlag types.USHORT
 
 const (
-	EVENT_HEADER_FLAG_EXTENDED_INFO   EVENT_HEADER_FLAG = 0x0001
-	EVENT_HEADER_FLAG_PRIVATE_SESSION EVENT_HEADER_FLAG = 0x0002
-	EVENT_HEADER_FLAG_STRING_ONLY     EVENT_HEADER_FLAG = 0x0004
-	EVENT_HEADER_FLAG_TRACE_MESSAGE   EVENT_HEADER_FLAG = 0x0008
-	EVENT_HEADER_FLAG_NO_CPUTIME      EVENT_HEADER_FLAG = 0x0010
-	EVENT_HEADER_FLAG_32_BIT_HEADER   EVENT_HEADER_FLAG = 0x0020
-	EVENT_HEADER_FLAG_64_BIT_HEADER   EVENT_HEADER_FLAG = 0x0040
-	EVENT_HEADER_FLAG_CLASSIC_HEADER  EVENT_HEADER_FLAG = 0x0100
+	EventHeaderFlagExtendedInfo   EventHeaderFlag = 0x0001
+	EventHeaderFlagPrivateSession EventHeaderFlag = 0x0002
+	EventHeaderFlagStringOnly     EventHeaderFlag = 0x0004
+	EventHeaderFlagTraceMessage   EventHeaderFlag = 0x0008
+	EventHeaderFlagNoCPUTime      EventHeaderFlag = 0x0010
+	EventHeaderFlag32BitHeader    EventHeaderFlag = 0x0020
+	EventHeaderFlag64BitHeader    EventHeaderFlag = 0x0040
+	EventHeaderFlagClassicHeader  EventHeaderFlag = 0x0100
 )
 
-// EVENT_HEADER_PROPERTY
-type EVENT_HEADER_PROPERTY types.USHORT
+// EventHeaderProperty
+type EventHeaderProperty types.USHORT
 
 const (
-	EVENT_HEADER_PROPERTY_XML             EVENT_HEADER_PROPERTY = 0x0001
-	EVENT_HEADER_PROPERTY_FORWARDED_XML   EVENT_HEADER_PROPERTY = 0x0002
-	EVENT_HEADER_PROPERTY_LEGACY_EVENTLOG EVENT_HEADER_PROPERTY = 0x0004
+	EventHeaderPropertyXML            EventHeaderProperty = 0x0001
+	EventHeaderPropertyForwardedXML   EventHeaderProperty = 0x0002
+	EventHeaderPropertyLegacyEventLog EventHeaderProperty = 0x0004
 )
 
 // EventDescriptor
@@ -369,12 +367,12 @@ type EventDescriptor struct {
 	Keyword uint64
 }
 
-// EVENT_HEADER
-type EVENT_HEADER struct {
+// EventHeader
+type EventHeader struct {
 	Size            types.USHORT
 	HeaderType      types.USHORT
-	Flags           EVENT_HEADER_FLAG
-	EventProperty   EVENT_HEADER_PROPERTY
+	Flags           EventHeaderFlag
+	EventProperty   EventHeaderProperty
 	ThreadId        types.ULONG
 	ProcessId       types.ULONG
 	TimeStamp       types.LARGE_INTEGER
@@ -384,13 +382,31 @@ type EVENT_HEADER struct {
 	ActivityId      types.GUID
 }
 
+type BufferContext struct {
+	ProcessorIndex [2]byte
+	LoggerID       uint16
+}
+
+type Linkage struct {
+	Linkage   uint16
+	Resreved2 uint16
+}
+
+type EventHeaderExtendedDataItem struct {
+	Reserved1 uint16
+	ExtType   uint16
+	Linkage
+	DataSize uint16
+	DataPtr  uint64
+}
+
 // EventRecord
 type EventRecord struct {
-	EventHeader       EVENT_HEADER
-	BufferContext     types.PVOID
+	EventHeader       EventHeader
+	BufferContext     BufferContext
 	ExtendedDataCount types.USHORT
 	UserDataLength    types.USHORT
-	ExtendedData      PEVENT_HEADER_EXTENDED_DATA_ITEM
+	ExtendedData      *EventHeaderExtendedDataItem
 	UserData          types.PVOID
 	UserContext       types.PVOID
 }
