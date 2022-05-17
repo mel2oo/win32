@@ -103,12 +103,10 @@ func main() {
 }
 
 func bufferStatsCallback(logfile *evntrace.EventTraceLogFile) uintptr {
-	fmt.Println("bufferStatsCallback")
 	return callbackNext
 }
 
 func processKeventCallback(evt *tdh.EventRecord) uintptr {
-	fmt.Println("processKeventCallback")
 
 	bufferSize := evtBufferSize
 	buffer := tdh.TRACE_EVENT_INFO{}

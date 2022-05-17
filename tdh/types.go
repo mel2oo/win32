@@ -122,53 +122,31 @@ const (
 	TDH_OUTTYPE_NOPRINT                      TDH_OUT_TYPE = 301
 )
 
-// PROPERTY_FLAGS
-type PROPERTY_FLAGS types.UINT
+// PropertyFlags
+type PropertyFlags types.UINT
 
 const (
-	PropertyStruct           PROPERTY_FLAGS = 0x1
-	PropertyParamLength      PROPERTY_FLAGS = 0x2
-	PropertyParamCount       PROPERTY_FLAGS = 0x4
-	PropertyWBEMXmlFragment  PROPERTY_FLAGS = 0x8
-	PropertyParamFixedLength PROPERTY_FLAGS = 0x10
+	PropertyStruct           PropertyFlags = 0x1
+	PropertyParamLength      PropertyFlags = 0x2
+	PropertyParamCount       PropertyFlags = 0x4
+	PropertyWBEMXmlFragment  PropertyFlags = 0x8
+	PropertyParamFixedLength PropertyFlags = 0x10
 )
 
-// EVENT_PROPERTY_INFO_u1_s1
-type EVENT_PROPERTY_INFO_u1_s1 struct {
-	InType        TDH_IN_TYPE
-	OutType       TDH_OUT_TYPE
-	MapNameOffset types.ULONG
-}
-
-// EVENT_PROPERTY_INFO_u1_s2
-type EVENT_PROPERTY_INFO_u1_s2 struct {
+// EVENT_PROPERTY_INFO_u1
+type StructType struct {
 	StructStartIndex   types.USHORT
 	NumOfStructMembers types.USHORT
 	Padding            types.ULONG
 }
 
-// EVENT_PROPERTY_INFO_u1
-type EVENT_PROPERTY_INFO_u1 struct {
-	StructType EVENT_PROPERTY_INFO_u1_s2
-}
-
-// EVENT_PROPERTY_INFO_u2
-type EVENT_PROPERTY_INFO_u2 struct {
-	Count types.USHORT
-}
-
-// EVENT_PROPERTY_INFO_u3
-type EVENT_PROPERTY_INFO_u3 struct {
-	Length types.USHORT
-}
-
-// EVENT_PROPERTY_INFO
-type EVENT_PROPERTY_INFO struct {
-	Flags      PROPERTY_FLAGS
+// EventPropertyInfo
+type EventPropertyInfo struct {
+	Flags      PropertyFlags
 	NameOffset types.ULONG
-	U1         EVENT_PROPERTY_INFO_u1
-	U2         EVENT_PROPERTY_INFO_u2
-	U3         EVENT_PROPERTY_INFO_u3
+	StructType StructType
+	Count      types.USHORT
+	Length     types.USHORT
 	Reserved   types.ULONG
 }
 
@@ -179,16 +157,16 @@ type PROVIDER_FILTER_INFO struct {
 	MessageOffset          types.ULONG
 	Reserved               types.ULONG
 	PropertyCount          types.ULONG
-	EventPropertyInfoArray [1]EVENT_PROPERTY_INFO
+	EventPropertyInfoArray [1]EventPropertyInfo
 }
 
 type PPROVIDER_FILTER_INFO *PROVIDER_FILTER_INFO
 
-// TRACE_EVENT_INFO
-type TRACE_EVENT_INFO struct {
+// TraceEventInfo
+type TraceEventInfo struct {
 	ProviderGuid                types.GUID
 	EventGuid                   types.GUID
-	EventDescriptor             types.LPVOID
+	EventDescriptor             EventDescriptor
 	DecodingSource              DECODING_SOURCE
 	ProviderNameOffset          types.ULONG
 	LevelNameOffset             types.ULONG
@@ -205,10 +183,10 @@ type TRACE_EVENT_INFO struct {
 	PropertyCount               types.ULONG
 	TopLevelPropertyCount       types.ULONG
 	Flags                       TEMPLATE_FLAGS
-	EventPropertyInfoArray      [1]EVENT_PROPERTY_INFO
+	EventPropertyInfoArray      [1]EventPropertyInfo
 }
 
-type PTRACE_EVENT_INFO *TRACE_EVENT_INFO
+type PTRACE_EVENT_INFO *TraceEventInfo
 
 // MAP_VALUETYPE
 type MAP_VALUETYPE types.UINT
