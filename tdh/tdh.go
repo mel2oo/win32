@@ -38,7 +38,7 @@ var (
 
 // https://docs.microsoft.com/en-us/windows/win32/api/tdh/nf-tdh-tdhgeteventinformation
 func TdhGetEventInformation(Event *EventRecord, TdhContextCount types.ULONG,
-	TdhContext PTDH_CONTEXT, Buffer *TraceEventInfo, BufferSize *types.ULONG) types.ERROR_CODE {
+	TdhContext *TdhContext, Buffer *TraceEventInfo, BufferSize *types.ULONG) types.ErrorCode {
 	ret, _, _ := procTdhGetEventInformation.Call(
 		uintptr(unsafe.Pointer(Event)),
 		uintptr(TdhContextCount),
@@ -47,5 +47,37 @@ func TdhGetEventInformation(Event *EventRecord, TdhContextCount types.ULONG,
 		uintptr(unsafe.Pointer(BufferSize)),
 	)
 
-	return types.ERROR_CODE(ret)
+	return types.ErrorCode(ret)
+}
+
+// https://docs.microsoft.com/en-us/windows/win32/api/tdh/nf-tdh-tdhgetproperty
+func TdhGetProperty(pEvent *EventRecord, TdhContextCount types.ULONG, pTdhContext *TdhContext,
+	PropertyDataCount types.ULONG, pPropertyData *PropertyDataDescriptor, BufferSize types.ULONG,
+	pBuffer *types.BYTE) types.ErrorCode {
+	ret, _, _ := procTdhGetProperty.Call(
+		uintptr(unsafe.Pointer(pEvent)),
+		uintptr(TdhContextCount),
+		uintptr(unsafe.Pointer(pTdhContext)),
+		uintptr(PropertyDataCount),
+		uintptr(unsafe.Pointer(pPropertyData)),
+		uintptr(BufferSize),
+		uintptr(unsafe.Pointer(pBuffer)),
+	)
+
+	return types.ErrorCode(ret)
+}
+
+// https://docs.microsoft.com/en-us/windows/win32/api/tdh/nf-tdh-tdhgetpropertysize
+func TdhGetPropertySize(pEvent *EventRecord, TdhContextCount types.ULONG, pTdhContext *TdhContext,
+	PropertyDataCount types.ULONG, pPropertyData *PropertyDataDescriptor, pPropertySize *types.ULONG) types.ErrorCode {
+	ret, _, _ := procTdhGetPropertySize.Call(
+		uintptr(unsafe.Pointer(pEvent)),
+		uintptr(TdhContextCount),
+		uintptr(unsafe.Pointer(pTdhContext)),
+		uintptr(PropertyDataCount),
+		uintptr(unsafe.Pointer(pPropertyData)),
+		uintptr(unsafe.Pointer(pPropertySize)),
+	)
+
+	return types.ErrorCode(ret)
 }

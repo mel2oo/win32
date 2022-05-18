@@ -263,24 +263,22 @@ type PROVIDER_FIELD_INFOARRAY struct {
 
 type PPROVIDER_FIELD_INFOARRAY *PROVIDER_FIELD_INFOARRAY
 
-// TDH_CONTEXT_TYPE
-type TDH_CONTEXT_TYPE types.UINT
+// TdhContextType
+type TdhContextType types.UINT
 
 const (
-	TDH_CONTEXT_WPP_TMFFILE       TDH_CONTEXT_TYPE = 0
-	TDH_CONTEXT_WPP_TMFSEARCHPATH TDH_CONTEXT_TYPE = 1
-	TDH_CONTEXT_WPP_GMT           TDH_CONTEXT_TYPE = 2
-	TDH_CONTEXT_POINTERSIZE       TDH_CONTEXT_TYPE = 3
+	TdhContextWPPTmfFile       TdhContextType = 0
+	TdhContextWPPTmfSearchpath TdhContextType = 1
+	TdhContextWPPGMT           TdhContextType = 2
+	TdhContextPointersize      TdhContextType = 3
 )
 
-// TDH_CONTEXT
-type TDH_CONTEXT struct {
+// TdhContext
+type TdhContext struct {
 	ParameterValue types.ULONGLONG
-	ParameterType  TDH_CONTEXT_TYPE
+	ParameterType  TdhContextType
 	ParameterSize  types.ULONG
 }
-
-type PTDH_CONTEXT *TDH_CONTEXT
 
 // PropertyDataDescriptor
 type PropertyDataDescriptor struct {

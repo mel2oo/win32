@@ -135,7 +135,7 @@ var (
 )
 
 // REG_ERROR
-type REG_ERROR types.ERROR_CODE
+type REG_ERROR types.ErrorCode
 
 // HW_PROFILE_INFO
 type HW_PROFILE_INFO struct {
