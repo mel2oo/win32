@@ -24,21 +24,21 @@ type PROVIDER_ENUMERATION_INFO struct {
 
 type PPROVIDER_ENUMERATION_INFO *PROVIDER_ENUMERATION_INFO
 
-// DECODING_SOURCE
-type DECODING_SOURCE types.UINT
+// DecodingSource
+type DecodingSource types.UINT
 
 const (
-	DecodingSourceXMLFile DECODING_SOURCE = 0
-	DecodingSourceWbem    DECODING_SOURCE = 1
-	DecodingSourceWPP     DECODING_SOURCE = 2
+	DecodingSourceXMLFile DecodingSource = 0
+	DecodingSourceWbem    DecodingSource = 1
+	DecodingSourceWPP     DecodingSource = 2
 )
 
-// TEMPLATE_FLAGS
-type TEMPLATE_FLAGS types.UINT
+// TemplateFlags
+type TemplateFlags types.UINT
 
 const (
-	TEMPLATE_EVENT_DATA TEMPLATE_FLAGS = 1
-	TEMPLATE_USER_DATA  TEMPLATE_FLAGS = 2
+	TEMPLATE_EVENT_DATA TemplateFlags = 1
+	TEMPLATE_USER_DATA  TemplateFlags = 2
 )
 
 // TDH_IN_TYPE
@@ -167,7 +167,7 @@ type TraceEventInfo struct {
 	ProviderGuid                types.GUID
 	EventGuid                   types.GUID
 	EventDescriptor             EventDescriptor
-	DecodingSource              DECODING_SOURCE
+	DecodingSource              DecodingSource
 	ProviderNameOffset          types.ULONG
 	LevelNameOffset             types.ULONG
 	ChannelNameOffset           types.ULONG
@@ -182,7 +182,7 @@ type TraceEventInfo struct {
 	RelatedActivityIDNameOffset types.ULONG
 	PropertyCount               types.ULONG
 	TopLevelPropertyCount       types.ULONG
-	Flags                       TEMPLATE_FLAGS
+	Flags                       TemplateFlags
 	EventPropertyInfoArray      [1]EventPropertyInfo
 }
 
@@ -282,14 +282,12 @@ type TDH_CONTEXT struct {
 
 type PTDH_CONTEXT *TDH_CONTEXT
 
-// PROPERTY_DATA_DESCRIPTOR
-type PROPERTY_DATA_DESCRIPTOR struct {
+// PropertyDataDescriptor
+type PropertyDataDescriptor struct {
 	PropertyName types.ULONGLONG
 	ArrayIndex   types.ULONG
 	Reserved     types.ULONG
 }
-
-type PPROPERTY_DATA_DESCRIPTOR *PROPERTY_DATA_DESCRIPTOR
 
 // EVENT_HEADER_u_s
 type EVENT_HEADER_u_s struct {
