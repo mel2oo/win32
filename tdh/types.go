@@ -41,85 +41,85 @@ const (
 	TEMPLATE_USER_DATA  TemplateFlags = 2
 )
 
-// TDH_IN_TYPE
-type TDH_IN_TYPE types.USHORT
+// TdhInType
+type TdhInType types.USHORT
 
 const (
-	TDH_INTYPE_NULL                        TDH_IN_TYPE = 0
-	TDH_INTYPE_UNICODESTRING               TDH_IN_TYPE = 1
-	TDH_INTYPE_ANSISTRING                  TDH_IN_TYPE = 2
-	TDH_INTYPE_INT8                        TDH_IN_TYPE = 3
-	TDH_INTYPE_UINT8                       TDH_IN_TYPE = 4
-	TDH_INTYPE_INT16                       TDH_IN_TYPE = 5
-	TDH_INTYPE_UINT16                      TDH_IN_TYPE = 6
-	TDH_INTYPE_INT32                       TDH_IN_TYPE = 7
-	TDH_INTYPE_UINT32                      TDH_IN_TYPE = 8
-	TDH_INTYPE_INT64                       TDH_IN_TYPE = 9
-	TDH_INTYPE_UINT64                      TDH_IN_TYPE = 10
-	TDH_INTYPE_FLOAT                       TDH_IN_TYPE = 11
-	TDH_INTYPE_DOUBLE                      TDH_IN_TYPE = 12
-	TDH_INTYPE_BOOLEAN                     TDH_IN_TYPE = 13
-	TDH_INTYPE_BINARY                      TDH_IN_TYPE = 14
-	TDH_INTYPE_GUID                        TDH_IN_TYPE = 15
-	TDH_INTYPE_POINTER                     TDH_IN_TYPE = 16
-	TDH_INTYPE_FILETIME                    TDH_IN_TYPE = 17
-	TDH_INTYPE_SYSTEMTIME                  TDH_IN_TYPE = 18
-	TDH_INTYPE_SID                         TDH_IN_TYPE = 19
-	TDH_INTYPE_HEXINT32                    TDH_IN_TYPE = 20
-	TDH_INTYPE_HEXINT64                    TDH_IN_TYPE = 21
-	TDH_INTYPE_COUNTEDSTRING               TDH_IN_TYPE = 300
-	TDH_INTYPE_COUNTEDANSISTRING           TDH_IN_TYPE = 301
-	TDH_INTYPE_REVERSEDCOUNTEDSTRING       TDH_IN_TYPE = 302
-	TDH_INTYPE_REVERSEDCOUNTEDANSISTRING   TDH_IN_TYPE = 303
-	TDH_INTYPE_NONNULLTERMINATEDSTRING     TDH_IN_TYPE = 304
-	TDH_INTYPE_NONNULLTERMINATEDANSISTRING TDH_IN_TYPE = 305
-	TDH_INTYPE_UNICODECHAR                 TDH_IN_TYPE = 306
-	TDH_INTYPE_ANSICHAR                    TDH_IN_TYPE = 307
-	TDH_INTYPE_SIZET                       TDH_IN_TYPE = 308
-	TDH_INTYPE_HEXDUMP                     TDH_IN_TYPE = 309
-	TDH_INTYPE_WBEMSID                     TDH_IN_TYPE = 310
+	TdhIntypeNull                        TdhInType = 0
+	TdhIntypeUnicodestring               TdhInType = 1
+	TdhIntypeAnsiString                  TdhInType = 2
+	TdhIntypeInt8                        TdhInType = 3
+	TdhIntypeUint8                       TdhInType = 4
+	TdhIntypeInt16                       TdhInType = 5
+	TdhIntypeUint16                      TdhInType = 6
+	TdhIntypeInt32                       TdhInType = 7
+	TdhIntypeUint32                      TdhInType = 8
+	TdhIntypeInt64                       TdhInType = 9
+	TdhIntypeUint64                      TdhInType = 10
+	TdhIntypeFloat                       TdhInType = 11
+	TdhIntypeDouble                      TdhInType = 12
+	TdhIntypeBoolean                     TdhInType = 13
+	TdhIntypeBinary                      TdhInType = 14
+	TdhIntypeGuid                        TdhInType = 15
+	TdhIntypePointer                     TdhInType = 16
+	TdhIntypeFileTime                    TdhInType = 17
+	TdhIntypeSystemTime                  TdhInType = 18
+	TdhIntypeSid                         TdhInType = 19
+	TdhIntypeHexInt32                    TdhInType = 20
+	TdhIntypeHexInt64                    TdhInType = 21
+	TdhIntypeCountedString               TdhInType = 300
+	TdhIntypeCountedAnsiString           TdhInType = 301
+	TdhIntypeReversedCountedString       TdhInType = 302
+	TdhIntypeReversedCountedAnsiString   TdhInType = 303
+	TdhIntypeNonnullTerminatedString     TdhInType = 304
+	TdhIntypeNonnullTerminatedAnsiString TdhInType = 305
+	TdhIntypeUnicodeChar                 TdhInType = 306
+	TdhIntypeAnsiChar                    TdhInType = 307
+	TdhIntypeSizet                       TdhInType = 308
+	TdhIntypeHexDump                     TdhInType = 309
+	TdhIntypeWbemSid                     TdhInType = 310
 )
 
-// TDH_OUT_TYPE
-type TDH_OUT_TYPE types.USHORT
+// TdhOutType
+type TdhOutType types.USHORT
 
 const (
-	TDH_OUTTYPE_NULL                         TDH_OUT_TYPE = 0
-	TDH_OUTTYPE_STRING                       TDH_OUT_TYPE = 1
-	TDH_OUTTYPE_DATETIME                     TDH_OUT_TYPE = 2
-	TDH_OUTTYPE_BYTE                         TDH_OUT_TYPE = 3
-	TDH_OUTTYPE_UNSIGNEDBYTE                 TDH_OUT_TYPE = 4
-	TDH_OUTTYPE_SHORT                        TDH_OUT_TYPE = 5
-	TDH_OUTTYPE_UNSIGNEDSHORT                TDH_OUT_TYPE = 6
-	TDH_OUTTYPE_INT                          TDH_OUT_TYPE = 7
-	TDH_OUTTYPE_UNSIGNEDINT                  TDH_OUT_TYPE = 8
-	TDH_OUTTYPE_LONG                         TDH_OUT_TYPE = 9
-	TDH_OUTTYPE_UNSIGNEDLONG                 TDH_OUT_TYPE = 10
-	TDH_OUTTYPE_FLOAT                        TDH_OUT_TYPE = 11
-	TDH_OUTTYPE_DOUBLE                       TDH_OUT_TYPE = 12
-	TDH_OUTTYPE_BOOLEAN                      TDH_OUT_TYPE = 13
-	TDH_OUTTYPE_GUID                         TDH_OUT_TYPE = 14
-	TDH_OUTTYPE_HEXBINARY                    TDH_OUT_TYPE = 15
-	TDH_OUTTYPE_HEXINT8                      TDH_OUT_TYPE = 16
-	TDH_OUTTYPE_HEXINT16                     TDH_OUT_TYPE = 17
-	TDH_OUTTYPE_HEXINT32                     TDH_OUT_TYPE = 18
-	TDH_OUTTYPE_HEXINT64                     TDH_OUT_TYPE = 19
-	TDH_OUTTYPE_PID                          TDH_OUT_TYPE = 20
-	TDH_OUTTYPE_TID                          TDH_OUT_TYPE = 21
-	TDH_OUTTYPE_PORT                         TDH_OUT_TYPE = 22
-	TDH_OUTTYPE_IPV4                         TDH_OUT_TYPE = 23
-	TDH_OUTTYPE_IPV6                         TDH_OUT_TYPE = 24
-	TDH_OUTTYPE_SOCKETADDRESS                TDH_OUT_TYPE = 25
-	TDH_OUTTYPE_CIMDATETIME                  TDH_OUT_TYPE = 26
-	TDH_OUTTYPE_ETWTIME                      TDH_OUT_TYPE = 27
-	TDH_OUTTYPE_XML                          TDH_OUT_TYPE = 28
-	TDH_OUTTYPE_ERRORCODE                    TDH_OUT_TYPE = 29
-	TDH_OUTTYPE_WIN32ERROR                   TDH_OUT_TYPE = 30
-	TDH_OUTTYPE_NTSTATUS                     TDH_OUT_TYPE = 31
-	TDH_OUTTYPE_HRESULT                      TDH_OUT_TYPE = 32
-	TDH_OUTTYPE_CULTURE_INSENSITIVE_DATETIME TDH_OUT_TYPE = 33
-	TDH_OUTTYPE_REDUCEDSTRING                TDH_OUT_TYPE = 300
-	TDH_OUTTYPE_NOPRINT                      TDH_OUT_TYPE = 301
+	TdhOutTypeNull                       TdhOutType = 0
+	TdhOutTypeString                     TdhOutType = 1
+	TdhOutTypeDateTime                   TdhOutType = 2
+	TdhOutTypeByte                       TdhOutType = 3
+	TdhOutTypeUnsignedByte               TdhOutType = 4
+	TdhOutTypeShort                      TdhOutType = 5
+	TdhOutTypeUnsignedShort              TdhOutType = 6
+	TdhOutTypeInt                        TdhOutType = 7
+	TdhOutTypeUnsignedInt                TdhOutType = 8
+	TdhOutTypeLong                       TdhOutType = 9
+	TdhOutTypeUnsignedLong               TdhOutType = 10
+	TdhOutTypeFloat                      TdhOutType = 11
+	TdhOutTypeDouble                     TdhOutType = 12
+	TdhOutTypeBoolean                    TdhOutType = 13
+	TdhOutTypeGuid                       TdhOutType = 14
+	TdhOutTypeHexBinary                  TdhOutType = 15
+	TdhOutTypeHexInt8                    TdhOutType = 16
+	TdhOutTypeHexInt16                   TdhOutType = 17
+	TdhOutTypeHexInt32                   TdhOutType = 18
+	TdhOutTypeHexInt64                   TdhOutType = 19
+	TdhOutTypePid                        TdhOutType = 20
+	TdhOutTypeTid                        TdhOutType = 21
+	TdhOutTypePort                       TdhOutType = 22
+	TdhOutTypeIpv4                       TdhOutType = 23
+	TdhOutTypeIpv6                       TdhOutType = 24
+	TdhOutTypeSocketAddress              TdhOutType = 25
+	TdhOutTypeCIMDateTime                TdhOutType = 26
+	TdhOutTypeETWTime                    TdhOutType = 27
+	TdhOutTypeXml                        TdhOutType = 28
+	TdhOutTypeErrorCode                  TdhOutType = 29
+	TdhOutTypeWin32Error                 TdhOutType = 30
+	TdhOutTypeNtstatus                   TdhOutType = 31
+	TdhOutTypeHresult                    TdhOutType = 32
+	TdhOutTypeCultureInsensitiveDateTime TdhOutType = 33
+	TdhOutTypeReducedString              TdhOutType = 300
+	TdhOutTypeNoPrint                    TdhOutType = 301
 )
 
 // PropertyFlags
@@ -135,8 +135,8 @@ const (
 
 // EVENT_PROPERTY_INFO_u1
 type StructType struct {
-	InType        types.USHORT
-	OutType       types.USHORT
+	InType        TdhInType
+	OutType       TdhOutType
 	MapNameOffset types.ULONG
 }
 
