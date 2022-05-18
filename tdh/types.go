@@ -135,9 +135,9 @@ const (
 
 // EVENT_PROPERTY_INFO_u1
 type StructType struct {
-	StructStartIndex   types.USHORT
-	NumOfStructMembers types.USHORT
-	Padding            types.ULONG
+	InType        types.USHORT
+	OutType       types.USHORT
+	MapNameOffset types.ULONG
 }
 
 // EventPropertyInfo
