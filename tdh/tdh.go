@@ -38,12 +38,12 @@ var (
 
 // https://docs.microsoft.com/en-us/windows/win32/api/tdh/nf-tdh-tdhgeteventinformation
 func TdhGetEventInformation(Event *EventRecord, TdhContextCount types.ULONG,
-	TdhContext *TdhContext, Buffer []byte, BufferSize *types.ULONG) types.ErrorCode {
+	TdhContext *TdhContext, Buffer *TraceEventInfo, BufferSize *types.ULONG) types.ErrorCode {
 	ret, _, _ := procTdhGetEventInformation.Call(
 		uintptr(unsafe.Pointer(Event)),
 		uintptr(TdhContextCount),
 		uintptr(unsafe.Pointer(TdhContext)),
-		uintptr(unsafe.Pointer(&Buffer[0])),
+		uintptr(unsafe.Pointer(Buffer)),
 		uintptr(unsafe.Pointer(BufferSize)),
 	)
 
