@@ -409,7 +409,7 @@ type EventTraceLogFile struct {
 	BufferSize     types.ULONG
 	Filled         types.ULONG
 	EventsLost     types.ULONG
-	EventCallback  [8]byte
+	EventCallback  uintptr
 	IsKernelTrace  types.ULONG
 	Context        types.PVOID
 }
