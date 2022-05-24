@@ -2,7 +2,6 @@
 package ip2string
 
 import (
-	"net"
 	"syscall"
 	"unsafe"
 
@@ -10,12 +9,11 @@ import (
 )
 
 // https://docs.microsoft.com/en-us/windows/win32/api/ip2string/nf-ip2string-rtlipv6addresstostringw
-func RtlIpv6AddressToString(buffer []byte) net.IP {
-	ipv6 := make([]uint16, 46)
+func RtlIpv6AddressToString(buffer []byte, ipv6 []uint16) string {
 	_, _, _ = ntdll.ProcRtlIpv6AddressToString.Call(
 		uintptr(unsafe.Pointer(&buffer[0])),
 		uintptr(unsafe.Pointer(&ipv6[0])),
 	)
 
-	return net.ParseIP(syscall.UTF16ToString(ipv6))
+	return syscall.UTF16ToString(ipv6)
 }
