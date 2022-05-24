@@ -22,7 +22,7 @@ const evalJS = `
 `
 
 func main() {
-	url := flag.String("url", "https://docs.microsoft.com/en-us/windows/win32/api/winbase/", "")
+	url := flag.String("url", "https://docs.microsoft.com/en-us/windows/win32/api/ip2string/", "")
 	flag.Parse()
 
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
