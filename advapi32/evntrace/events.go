@@ -433,14 +433,14 @@ type EventDescriptor struct {
 	Keyword types.ULONGLONG
 }
 
-// EVENT_DATA_DESCRIPTOR
-type EVENT_DATA_DESCRIPTOR struct {
+// EventDataDescriptor
+type EventDataDescriptor struct {
 	Ptr      types.ULONGLONG
 	Size     types.ULONG
 	Reserved types.ULONG
 }
 
-type PEVENT_DATA_DESCRIPTOR *EVENT_DATA_DESCRIPTOR
+type PEVENT_DATA_DESCRIPTOR *EventDataDescriptor
 
 // EventLogType
 type EventLogType types.WORD
