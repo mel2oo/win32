@@ -254,26 +254,26 @@ const (
 	EVENT_TRACE_TYPE_WINEVT_RECEIVE EVENT_TRACE_TYPE = 0xF0
 )
 
-// TRACE_LEVEL
-type TRACE_LEVEL types.UCHAR
+// TraceLevel
+type TraceLevel types.UCHAR
 
 const (
-	TRACE_LEVEL_NONE        TRACE_LEVEL = 0
-	TRACE_LEVEL_FATAL       TRACE_LEVEL = 1
-	TRACE_LEVEL_ERROR       TRACE_LEVEL = 2
-	TRACE_LEVEL_WARNING     TRACE_LEVEL = 3
-	TRACE_LEVEL_INFORMATION TRACE_LEVEL = 4
-	TRACE_LEVEL_VERBOSE     TRACE_LEVEL = 5
-	TRACE_LEVEL_RESERVED6   TRACE_LEVEL = 6
-	TRACE_LEVEL_RESERVED7   TRACE_LEVEL = 7
-	TRACE_LEVEL_RESERVED8   TRACE_LEVEL = 8
-	TRACE_LEVEL_RESERVED9   TRACE_LEVEL = 9
+	TraceLevelNone        TraceLevel = 0
+	TraceLevelFatal       TraceLevel = 1
+	TraceLevelErrot       TraceLevel = 2
+	TraceLevelWarning     TraceLevel = 3
+	TraceLevelInformation TraceLevel = 4
+	TraceLevelVerbose     TraceLevel = 5
+	TraceLevelReserved6   TraceLevel = 6
+	TraceLevelReserved7   TraceLevel = 7
+	TraceLevelReserved8   TraceLevel = 8
+	TraceLevelReserved9   TraceLevel = 9
 )
 
 // EVENT_TRACE_HEADER_u2_s
 type EVENT_TRACE_HEADER_u2_s struct {
 	Type    EVENT_TRACE_TYPE
-	Level   TRACE_LEVEL
+	Level   TraceLevel
 	Version types.USHORT
 }
 
