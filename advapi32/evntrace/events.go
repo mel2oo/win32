@@ -234,24 +234,24 @@ type EVENT_TRACE_HEADER_u1_s struct {
 	MarkerFlags types.UCHAR
 }
 
-// EVENT_TRACE_TYPE
-type EVENT_TRACE_TYPE types.UCHAR
+// EventTraceType
+type EventTraceType types.UCHAR
 
 const (
-	EVENT_TRACE_TYPE_INFO           EVENT_TRACE_TYPE = 0x00
-	EVENT_TRACE_TYPE_START          EVENT_TRACE_TYPE = 0x01
-	EVENT_TRACE_TYPE_END            EVENT_TRACE_TYPE = 0x02
-	EVENT_TRACE_TYPE_STOP           EVENT_TRACE_TYPE = 0x02
-	EVENT_TRACE_TYPE_DC_START       EVENT_TRACE_TYPE = 0x03
-	EVENT_TRACE_TYPE_DC_END         EVENT_TRACE_TYPE = 0x04
-	EVENT_TRACE_TYPE_EXTENSION      EVENT_TRACE_TYPE = 0x05
-	EVENT_TRACE_TYPE_REPLY          EVENT_TRACE_TYPE = 0x06
-	EVENT_TRACE_TYPE_DEQUEUE        EVENT_TRACE_TYPE = 0x07
-	EVENT_TRACE_TYPE_RESUME         EVENT_TRACE_TYPE = 0x07
-	EVENT_TRACE_TYPE_CHECKPOINT     EVENT_TRACE_TYPE = 0x08
-	EVENT_TRACE_TYPE_SUSPEND        EVENT_TRACE_TYPE = 0x08
-	EVENT_TRACE_TYPE_WINEVT_SEND    EVENT_TRACE_TYPE = 0x09
-	EVENT_TRACE_TYPE_WINEVT_RECEIVE EVENT_TRACE_TYPE = 0xF0
+	EventTraceTypeInfo          EventTraceType = 0x00
+	EventTraceTypeStart         EventTraceType = 0x01
+	EventTraceTypeEnd           EventTraceType = 0x02
+	EventTraceTypeStop          EventTraceType = 0x02
+	EventTraceTypeDCStart       EventTraceType = 0x03
+	EventTraceTypeDCEnd         EventTraceType = 0x04
+	EventTraceTypeExtension     EventTraceType = 0x05
+	EventTraceTypeReply         EventTraceType = 0x06
+	EventTraceTypeDequeue       EventTraceType = 0x07
+	EventTraceTypeResume        EventTraceType = 0x07
+	EventTraceTypeCheckPoint    EventTraceType = 0x08
+	EventTraceTypeSuspend       EventTraceType = 0x08
+	EventTraceTypeWinevtSend    EventTraceType = 0x09
+	EventTraceTypeWinevtReceive EventTraceType = 0xF0
 )
 
 // TraceLevel
@@ -272,7 +272,7 @@ const (
 
 // EVENT_TRACE_HEADER_u2_s
 type EVENT_TRACE_HEADER_u2_s struct {
-	Type    EVENT_TRACE_TYPE
+	Type    EventTraceType
 	Level   TraceLevel
 	Version types.USHORT
 }
