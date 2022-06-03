@@ -332,9 +332,9 @@ type PEVENT_INSTANCE_HEADER *EVENT_INSTANCE_HEADER
 type ProcessTraceMode types.ULONG
 
 const (
-	PROCESS_TRACE_MODE_REAL_TIME     ProcessTraceMode = 0x00000100
-	PROCESS_TRACE_MODE_RAW_TIMESTAMP ProcessTraceMode = 0x00001000
-	PROCESS_TRACE_MODE_EVENT_RECORD  ProcessTraceMode = 0x10000000
+	ProcessTraceModeRealTime     ProcessTraceMode = 0x00000100
+	ProcessTraceModeRawTimestamp ProcessTraceMode = 0x00001000
+	ProcessTraceModeEventRecord  ProcessTraceMode = 0x10000000
 )
 
 // EVENT_TRACE_LOGFILE_u1
