@@ -214,18 +214,18 @@ const (
 	EventTraceControlIncrementFile TraceControlCode = 4
 )
 
-// TRACE_MESSAGE_FLAGS
-type TRACE_MESSAGE_FLAGS types.ULONG
+// TraceMessageFlags
+type TraceMessageFlags types.ULONG
 
 const (
-	TRACE_MESSAGE_SEQUENCE              TRACE_MESSAGE_FLAGS = 1
-	TRACE_MESSAGE_GUID                  TRACE_MESSAGE_FLAGS = 2
-	TRACE_MESSAGE_COMPONENTID           TRACE_MESSAGE_FLAGS = 4
-	TRACE_MESSAGE_TIMESTAMP             TRACE_MESSAGE_FLAGS = 8
-	TRACE_MESSAGE_PERFORMANCE_TIMESTAMP TRACE_MESSAGE_FLAGS = 16
-	TRACE_MESSAGE_SYSTEMINFO            TRACE_MESSAGE_FLAGS = 32
-	TRACE_MESSAGE_POINTER32             TRACE_MESSAGE_FLAGS = 0x0040
-	TRACE_MESSAGE_POINTER64             TRACE_MESSAGE_FLAGS = 0x0080
+	TraceMessageSequence             TraceMessageFlags = 1
+	TraceMessageGuid                 TraceMessageFlags = 2
+	TraceMessageComponentid          TraceMessageFlags = 4
+	TraceMessageTimestamp            TraceMessageFlags = 8
+	TraceMessagePerformanceTimestamp TraceMessageFlags = 16
+	TraceMessageSysteminfo           TraceMessageFlags = 32
+	TraceMessagePointer32            TraceMessageFlags = 0x0040
+	TraceMessagePointer64            TraceMessageFlags = 0x0080
 )
 
 // EVENT_TRACE_HEADER_u1_s
