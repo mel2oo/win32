@@ -433,8 +433,6 @@ type EventDescriptor struct {
 	Keyword types.ULONGLONG
 }
 
-type PCEVENT_DESCRIPTOR *EventDescriptor
-
 // EVENT_DATA_DESCRIPTOR
 type EVENT_DATA_DESCRIPTOR struct {
 	Ptr      types.ULONGLONG
