@@ -422,8 +422,8 @@ type EVENT_INSTANCE_INFO struct {
 
 type PEVENT_INSTANCE_INFO *EVENT_INSTANCE_INFO
 
-// EVENT_DESCRIPTOR
-type EVENT_DESCRIPTOR struct {
+// EventDescriptor
+type EventDescriptor struct {
 	Id      types.USHORT
 	Version types.UCHAR
 	Channel types.UCHAR
@@ -433,7 +433,7 @@ type EVENT_DESCRIPTOR struct {
 	Keyword types.ULONGLONG
 }
 
-type PCEVENT_DESCRIPTOR *EVENT_DESCRIPTOR
+type PCEVENT_DESCRIPTOR *EventDescriptor
 
 // EVENT_DATA_DESCRIPTOR
 type EVENT_DATA_DESCRIPTOR struct {
