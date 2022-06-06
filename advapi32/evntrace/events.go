@@ -348,8 +348,8 @@ type EVENT_TRACE_LOGFILE_u2 struct {
 	// EventRecordCallback PEVENT_RECORD_CALLBACK
 }
 
-// ETW_BUFFER_CONTEXT
-type ETW_BUFFER_CONTEXT struct {
+// EtwBufferContext
+type EtwBufferContext struct {
 	ProcessorNumber types.UCHAR
 	Alignment       types.UCHAR
 	LoggerId        types.USHORT
