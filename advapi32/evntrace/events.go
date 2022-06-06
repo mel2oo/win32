@@ -440,8 +440,6 @@ type EventDataDescriptor struct {
 	Reserved types.ULONG
 }
 
-type PEVENT_DATA_DESCRIPTOR *EventDataDescriptor
-
 // EventLogType
 type EventLogType types.WORD
 
